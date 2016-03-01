@@ -23,6 +23,7 @@
     <!-- --------------- App init --------------- -->
     <script src="js/app.js"></script>
 
+
     <title>Onsen UI Master-Details</title>
 
     <style>
@@ -96,6 +97,56 @@
             padding-top: 10px;
             padding-bottom: 10px;
         }
+        
+        #map {
+            height: 50%;
+        }
+        
+        .controls {
+            margin-top: 10px;
+            border: 1px solid transparent;
+            border-radius: 2px 0 0 2px;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            height: 32px;
+            outline: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+        
+        #pac-input {
+            background-color: #fff;
+            font-family: Roboto;
+            font-size: 15px;
+            font-weight: 300;
+            margin-left: 12px;
+            padding: 0 11px 0 13px;
+            text-overflow: ellipsis;
+            width: 300px;
+        }
+        
+        #pac-input:focus {
+            border-color: #4d90fe;
+        }
+        
+        .pac-container {
+            font-family: Roboto;
+        }
+        
+        #type-selector {
+            color: #fff;
+            background-color: #4d90fe;
+            padding: 5px 11px 0px 11px;
+        }
+        
+        #type-selector label {
+            font-family: Roboto;
+            font-size: 13px;
+            font-weight: 300;
+        }
+        
+        #target {
+            width: 345px;
+        }
     </style>
 
 </head>
@@ -109,64 +160,8 @@
 
 
     <!-- Events page -->
-    <ons-navigator var="navi">
+    <ons-navigator var="navi" page="events.html">
         <ons-page>
-            <ons-toolbar>
-                <div class="left">
-                    <ons-toolbar-button onclick="navi.pushPage('create.html',{ animation : 'lift' });">
-                        <ons-icon icon="ion-ios-compose-outline" fixed-width="false" style="font-size: 26px; vertical-align: -4px"></ons-icon>
-                    </ons-toolbar-button>
-                </div>
-                <div class="center">
-                    Events
-                </div>
-                <div class="right">
-                    <ons-toolbar-button onclick="navi.pushPage('search.html',{ animation : 'lift' });">
-                        <ons-icon icon="ion-ios-search" fixed-width="false" style="font-size: 26px; vertical-align: -4px;"></ons-icon>
-                    </ons-toolbar-button>
-                </div>
-            </ons-toolbar>
-            <ons-list ng-controller="MasterController">
-                <ons-list-item modifier="chevron" class="item" ng-repeat="item in items" ng-click="showDetail($index)">
-                    <ons-row>
-                        <ons-col width="60px">
-                            <div class="item-thum"><img src="img/default-img.png" height="50px" width="50px" class="avator"></div>
-                        </ons-col>
-                        <ons-col>
-                            <header>
-                                <span class="item-title">{{item.title}}</span>
-                                <span class="item-label">{{item.label}}</span>
-                            </header>
-                            <p class="item-desc">{{item.desc}}</p>
-                        </ons-col>
-                    </ons-row>
-                </ons-list-item>
-            </ons-list>
-            <div class="tab-bar" style="background-color:white">
-                <label class="tab-bar__item">
-                    <input type="radio" name="tab-bar-a" checked="checked">
-                    <button class="tab-bar__button">
-                        <i class="tab-bar__icon ion-ios-home"></i>
-                        <div class="tab-bar__label">Events</div>
-                    </button>
-                </label>
-
-                <label class="tab-bar__item">
-                    <input type="radio" name="tab-bar-a">
-                    <button class="tab-bar__button">
-                        <i class="tab-bar__icon ion-ios-paper"></i>
-                        <div class="tab-bar__label">Today</div>
-                    </button>
-                </label>
-
-                <label class="tab-bar__item">
-                    <input type="radio" name="tab-bar-a">
-                    <button class="tab-bar__button">
-                        <i class="tab-bar__icon ion-ios-person"></i>
-                        <div class="tab-bar__label">Profile</div>
-                    </button>
-                </label>
-            </div>
         </ons-page>
     </ons-navigator>
     <!-- Events page end -->
@@ -217,15 +212,201 @@
     </ons-template>
     <!-- Detail page end -->
 
+    <!-- Events page -->
+    <ons-template id="events.html">
+        <ons-page>
+            <ons-toolbar>
+                <!-- 
+                <div class="left">
+                    <ons-toolbar-button onclick="navi.pushPage('create.html',{ animation : 'lift' });">
+                        <ons-icon icon="ion-ios-compose-outline" fixed-width="false" style="font-size: 26px; vertical-align: -4px"></ons-icon>
+                    </ons-toolbar-button>
+                </div>
+                -->
+                <div class="center">
+                    Events
+                </div>
+                <div class="right">
+                    <ons-toolbar-button onclick="navi.pushPage('create.html',{ animation : 'lift' });">
+                        <ons-icon icon="ion-ios-compose-outline" fixed-width="false" style="font-size: 26px; vertical-align: -4px"></ons-icon>
+                    </ons-toolbar-button>
+                    <!-- 
+                    <ons-toolbar-button onclick="navi.pushPage('search.html',{ animation : 'lift' });">
+                        <ons-icon icon="ion-ios-search" fixed-width="false" style="font-size: 26px; vertical-align: -4px;"></ons-icon>
+                    </ons-toolbar-button>
+                    -->
+                </div>
+            </ons-toolbar>
+            <div class="search-bar">
+                <input type="search" class="search-input" style="width: 96%; margin: 6px auto 6px auto;" placeholder="Search">
+            </div>
+            <ons-list ng-controller="MasterController">
+                <ons-list-item modifier="chevron" class="item" ng-repeat="item in items" ng-click="showDetail($index)">
+                    <ons-gesture-detector ng-hold="doSomeThing()">
+                    <ons-row>
+                        <ons-col width="60px">
+                            <div class="item-thum"><img src="img/default-img.png" height="50px" width="50px" class="avator"></div>
+                        </ons-col>
+                        <ons-col>
+                            <header>
+                                <span class="item-title">Interview day</span>
+                                <!--
+                                <span class="item-label">FPT University</span>
+                                -->
+                            </header>
+                            <p class="item-desc">
+                                <ons-icon icon="ion-ios-location" style="color:#4e81ba;" size="20px"></ons-icon>
+                                Fpt University
+                            </p>
+                            <p class="item-desc">
+                                <ons-icon icon="ion-ios-calendar-outline" style="color:#4e81ba" size="20px"></ons-icon>
+                                30/02/2016
+                            </p>
+                            <p class="item-desc">
+                                <ons-icon icon="ion-ios-clock-outline" style="color:#4e81ba" size="20px"></ons-icon>
+                                9:30
+                            </p>
+                        </ons-col>
+                    </ons-row>
+                    </ons-gesture-detector>
+                    <script>
+                    function doSomeThing(){
+                        alert("hold");
+                    }    
+                    </script>
+                </ons-list-item>
+            </ons-list>
+            <div class="tab-bar" style="background-color:white">
+                <label class="tab-bar__item">
+                    <input type="radio" name="tab-bar-a" checked="checked">
+                    <button class="tab-bar__button">
+                        <i class="tab-bar__icon ion-ios-home"></i>
+                        <div class="tab-bar__label">Events</div>
+                    </button>
+                </label>
+
+                <label class="tab-bar__item">
+                    <input type="radio" name="tab-bar-a" onclick="navi.pushPage('today.html',{ animation : 'fade' });">
+                    <button class="tab-bar__button">
+                        <i class="tab-bar__icon ion-ios-paper"></i>
+                        <div class="tab-bar__label">Today</div>
+                    </button>
+                </label>
+
+                <label class="tab-bar__item">
+                    <input type="radio" name="tab-bar-a" onclick="navi.pushPage('profile.html',{ animation : 'fade' });">
+                    <button class="tab-bar__button">
+                        <i class="tab-bar__icon ion-ios-person"></i>
+                        <div class="tab-bar__label">Profile</div>
+                    </button>
+                </label>
+            </div>
+        </ons-page>
+    </ons-template>
+    <!-- Events page end -->
+
     <!-- Today event page -->
     <ons-template id="today.html">
-        ...
+        <ons-page>
+            <ons-toolbar>
+                <div class="left">
+                </div>
+                <div class="center">
+                    Today
+                </div>
+                <div class="right">
+                </div>
+            </ons-toolbar>
+            <div class="search-bar">
+                <input type="search" class="search-input" style="width: 96%; margin: 6px auto 6px auto;" placeholder="Search">
+            </div>
+            <ons-list ng-controller="MasterController">
+                <ons-list-item modifier="chevron" class="item" ng-repeat="item in items" ng-click="showDetail($index)">
+                    <ons-row>
+                        <ons-col width="60px">
+                            <div class="item-thum"><img src="img/default-img.png" height="50px" width="50px" class="avator"></div>
+                        </ons-col>
+                        <ons-col>
+                            <header>
+                                <span class="item-title">Interview day</span>
+                                <!--
+                                <span class="item-label">FPT University</span>
+                                -->
+                            </header>
+                            <p class="item-desc">
+                                <ons-icon icon="ion-ios-location" style="color:#4e81ba" size="15px"></ons-icon>
+                                Fpt University
+                            </p>
+                            <p class="item-desc">
+                                <ons-icon icon="ion-ios-calendar-outline" style="color:#4e81ba" size="25px"></ons-icon>
+                                30/02/2016
+                            </p>
+                            <p class="item-desc">
+                                <ons-icon icon="ion-ios-clock-outline" style="color:#4e81ba" size="15px"></ons-icon>
+                                9:30
+                            </p>
+                        </ons-col>
+                    </ons-row>
+                </ons-list-item>
+            </ons-list>
+            <div class="tab-bar" style="background-color:white">
+                <label class="tab-bar__item">
+                    <input type="radio" name="tab-bar-a" onclick="navi.pushPage('events.html',{ animation : 'fade' });">
+                    <button class="tab-bar__button">
+                        <i class="tab-bar__icon ion-ios-home"></i>
+                        <div class="tab-bar__label">Events</div>
+                    </button>
+                </label>
+
+                <label class="tab-bar__item">
+                    <input type="radio" name="tab-bar-a" checked="checked">
+                    <button class="tab-bar__button">
+                        <i class="tab-bar__icon ion-ios-paper"></i>
+                        <div class="tab-bar__label">Today</div>
+                    </button>
+                </label>
+
+                <label class="tab-bar__item">
+                    <input type="radio" name="tab-bar-a" onclick="navi.pushPage('profile.html',{ animation : 'fade' });">
+                    <button class="tab-bar__button">
+                        <i class="tab-bar__icon ion-ios-person"></i>
+                        <div class="tab-bar__label">Profile</div>
+                    </button>
+                </label>
+            </div>
+        </ons-page>
     </ons-template>
     <!-- Today event page end -->
 
     <!-- Profile page -->
     <ons-template id="profile.html">
-        ...
+        <ons-page>
+            <div class="tab-bar" style="background-color:white">
+                <label class="tab-bar__item">
+                    <input type="radio" name="tab-bar-a" onclick="navi.pushPage('events.html',{ animation : 'fade' });">
+                    <button class="tab-bar__button">
+                        <i class="tab-bar__icon ion-ios-home"></i>
+                        <div class="tab-bar__label">Events</div>
+                    </button>
+                </label>
+
+                <label class="tab-bar__item">
+                    <input type="radio" name="tab-bar-a" onclick="navi.pushPage('today.html',{ animation : 'fade' });">
+                    <button class="tab-bar__button">
+                        <i class="tab-bar__icon ion-ios-paper"></i>
+                        <div class="tab-bar__label">Today</div>
+                    </button>
+                </label>
+
+                <label class="tab-bar__item">
+                    <input type="radio" name="tab-bar-a" checked="checked">
+                    <button class="tab-bar__button">
+                        <i class="tab-bar__icon ion-ios-person"></i>
+                        <div class="tab-bar__label">Profile</div>
+                    </button>
+                </label>
+            </div>
+        </ons-page>
     </ons-template>
     <!-- Profile page end -->
 
@@ -296,14 +477,7 @@
                             <ons-icon icon="ion-ios-location" style="color:#4e81ba;margin-top:6px"></ons-icon>
                         </ons-col>
                         <ons-col>
-                            <input type="text" class="text-input--underbar width-full" placeholder="Location" value="">
-                        </ons-col>
-                    </ons-row>
-                </div>
-                <div class="form-row">
-                    <ons-row>
-                        <ons-col>
-                            <img src="img/default-img.png" height="80%" width="80%" class="avator">
+                            <input type="text" class="text-input--underbar width-full" placeholder="Location" value="" onclick="modal.show('modal')">
                         </ons-col>
                     </ons-row>
                 </div>
@@ -312,6 +486,18 @@
         </ons-page>
     </ons-template>
     <!-- Create page end -->
+
+    <ons-modal var="modal">
+        <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+        <div id="map"></div>
+        <ons-button id="show-modal" class="ng-isolate-scope button effeckt-button button--light slide-left" modifier="light" onclick="modal.hide('modal')">
+            <span class="label ons-button-inner">
+                                    <span class="ng-scope">Done</span>
+            </span>
+            <span class="spinner button__spinner button--light__spinner"></span>
+        </ons-button>
+
+    </ons-modal>
 
     <!-- Search page -->
     <ons-template id="search.html">
@@ -329,6 +515,89 @@
         </ons-page>
     </ons-template>
     <!-- Search page end-->
+
+    <!-- Google maps script -->
+    <script>
+        var map = null;
+        var currentMarker = null;
+        function getMakerPosition() {
+        var pos = currentMarker[0].getPosition();
+        map.setCenter(pos);
+        alert(pos);
+         }
+
+    function initAutocomplete() {
+     map = new google.maps.Map(document.getElementById('map'), {
+     center: {lat: 21.0277644, lng: 105.83415979999995},
+     zoom: 13,
+     mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+  // Create the search box and link it to the UI element.
+    var input = document.getElementById('pac-input');
+    var searchBox = new google.maps.places.SearchBox(input);
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+  // Bias the SearchBox results towards current map's viewport.
+    map.addListener('bounds_changed', function() {
+        searchBox.setBounds(map.getBounds());
+    });
+
+    var markers = [];
+  // [START region_getplaces]
+  // Listen for the event fired when the user selects a prediction and retrieve
+  // more details for that place.
+    searchBox.addListener('places_changed', function() {
+        var places = searchBox.getPlaces();
+        if (places.length == 0) {
+        return;
+    }
+
+    // Clear out the old markers.
+    markers.forEach(function(marker) {
+      marker.setMap(null);
+    });
+    
+
+    // For each place, get the icon, name and location.
+    var bounds = new google.maps.LatLngBounds();
+    places.forEach(function(place) {
+      var icon = {
+        url: place.icon,
+        size: new google.maps.Size(71, 71),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(17, 34),
+        scaledSize: new google.maps.Size(25, 25)
+      };
+
+      // Create a marker for each place.
+      markers.push(new google.maps.Marker({
+        map: map,
+        icon: icon,
+        title: place.name,
+        position: place.geometry.location,
+        draggable: true,
+        animation: google.maps.Animation.DROP
+      })
+      );
+
+      currentMarker = markers;
+
+      if (place.geometry.viewport) {
+        // Only geocodes have viewport.
+        bounds.union(place.geometry.viewport);
+      } else {
+        bounds.extend(place.geometry.location);
+      }
+    });
+    map.fitBounds(bounds);
+  });
+  // [END region_getplaces]
+}
+    </script>
+    <!-- Google maps script end -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBU1HwiKv11yL7bnrg_BPwoG2QDKudzTck&libraries=places&callback=initAutocomplete"
+    async defer></script>
 </body>
 
 </html>

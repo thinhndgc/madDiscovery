@@ -31,77 +31,7 @@
 
     <title>Onsen UI Sliding Menu</title>
 
-    <script>
-        var app = angular.module('app', ['onsen', 'ui.bootstrap']);
-        app.controller('testController', function($scope){
-          $scope.today = function() {
-            $scope.dt = new Date();
-          };
-          $scope.today();
-
-          $scope.clear = function () {
-            $scope.dt = null;
-          };
-
-          // Disable weekend selection
-          $scope.disabled = function(date, mode) {
-            return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
-          };
-
-          $scope.toggleMin = function() {
-            $scope.minDate = $scope.minDate ? null : new Date();
-          };
-          $scope.toggleMin();
-          $scope.maxDate = new Date(2020, 5, 22);
-
-          $scope.open = function($event) {
-            $scope.status.opened = true;
-          };
-
-          $scope.dateOptions = {
-            formatYear: 'yy',
-            startingDay: 1
-          };
-
-          $scope.formats = ['dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-          $scope.format = $scope.formats[0];
-
-          $scope.status = {
-            opened: false
-          };
-
-          var tomorrow = new Date();
-          tomorrow.setDate(tomorrow.getDate() + 1);
-          var afterTomorrow = new Date();
-          afterTomorrow.setDate(tomorrow.getDate() + 2);
-          $scope.events =
-            [
-              {
-                date: tomorrow,
-                status: 'full'
-              },
-              {
-                date: afterTomorrow,
-                status: 'partially'
-              }
-            ];
-
-          $scope.getDayClass = function(date, mode) {
-            if (mode === 'day') {
-              var dayToCheck = new Date(date).setHours(0,0,0,0);
-
-              for (var i=0;i<$scope.events.length;i++){
-                var currentDay = new Date($scope.events[i].date).setHours(0,0,0,0);
-
-                if (dayToCheck === currentDay) {
-                  return $scope.events[i].status;
-                }
-              }
-            }
-
-            return '';
-          };
-        });
+    
     </script>
 
     <style>
@@ -173,127 +103,28 @@
     <script src="scripts/index.js"></script>
     <!-- -->
 
-    <ons-sliding-menu menu-page="menu.html" main-page="page1.html" side="left"
-                      var="menu" type="reveal" max-slide-distance="260px" swipeable="true">
-    </ons-sliding-menu>
+    <ons-page ng-controller="TabBarController">
 
-    <ons-template id="menu.html">
-        <ons-page modifier="menu-page">
-            <ons-toolbar modifier="transparent"></ons-toolbar>
+    <ons-tabbar animation="fade" keepPage="true" var="roottab">
+        <ons-tab page="neighbor.html" label="" active="true">
+            <ons-icon icon="ion-map" class="tab-icon"></ons-icon>
+        </ons-tab>
 
-            <ons-list class="menu-list">
-                <ons-list-item class="menu-item" ng-click="menu.setMainPage('page1.html', {closeMenu: true})">
-                    <ons-icon icon="fa-plus"></ons-icon>
-                    New Post
-                </ons-list-item>
+        <ons-tab page="gossip.html" label="">
+            <ons-icon icon="ion-planet" class="tab-icon"></ons-icon>
+        </ons-tab>
 
-                <ons-list-item class="menu-item" ng-click="menu.setMainPage('page2.html', {closeMenu: true})">
-                    <ons-icon icon="fa-bookmark"></ons-icon>
-                    Bookmark
-                </ons-list-item>
+        <ons-tab page="chatrooms.html" label="">
+            <div class="notification reply-notification"></div>
+            <ons-icon icon="ion-chatbubbles" class="tab-icon"></ons-icon>
+        </ons-tab>
 
-                <ons-list-item class="menu-item" ng-click="menu.setMainPage('page1.html', {closeMenu: true})">
-                    <ons-icon icon="fa-twitter"></ons-icon>
-                    Official Twitter
-                </ons-list-item>
-            </ons-list>
+        <ons-tab page="tab-news.html" label="">
+            <div class="notification earth-notification"></div>
+            <ons-icon icon="ion-earth" class="tab-icon"></ons-icon>
+        </ons-tab>
+    </ons-tabbar>
 
-            <br>
-
-            <ons-list class="bottom-menu-list">
-                <ons-list-item class="bottom-menu-item" ng-click="menu.setMainPage('page2.html', {closeMenu: true})">
-                    Settings
-                    <div class="notification menu-notification">3</div>
-                </ons-list-item>
-
-                <ons-list-item class="bottom-menu-item" ng-click="menu.setMainPage('page1.html', {closeMenu: true})">
-                    Help
-                </ons-list-item>
-
-                <ons-list-item class="bottom-menu-item" ng-click="menu.setMainPage('page2.html', {closeMenu: true})">
-                    Send feedback
-                </ons-list-item>
-            </ons-list>
-        </ons-page>
-    </ons-template>
-
-    <ons-template id="page1.html">
-        <ons-page ng-controller="testController">
-            <ons-toolbar>
-                <div class="left">
-                    <ons-toolbar-button ng-click="menu.toggle()">
-                        <ons-icon icon="ion-navicon" size="28px" fixed-width="false"></ons-icon>
-                    </ons-toolbar-button>
-                </div>
-                <div class="center">Page 1</div>
-            </ons-toolbar>
-
-            <ons-row style="margin-top: 100px; text-align: center;">
-                <ons-col>
-                    <pre>Selected date is: <em>{{dt | date:'fullDate' }}</em></pre>
-
-                    <h4>Inline</h4>
-                    <div style="display:inline-block; min-height:290px;">
-                      <datepicker ng-model="dt" min-date="minDate" show-weeks="true" class="well well-sm" custom-class="getDayClass(date, mode)"></datepicker>
-                    </div>
-
-                    <h4>Popup</h4>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <p class="input-group">
-                              <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dt" is-open="status.opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
-                              <span class="input-group-btn">
-                                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                              </span>
-                            </p>
-                        </div>
-
-                        <div class="col-md-6">
-                            <p class="input-group">
-                              <input type="date" class="form-control" datepicker-popup ng-model="dt" is-open="status.opened" min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
-                              <span class="input-group-btn">
-                                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-                              </span>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label>Format:</label> <select class="form-control" ng-model="format" ng-options="f for f in formats"><option></option></select>
-                        </div>
-                    </div>
-
-                    <hr />
-                    <button type="button" class="btn btn-sm btn-info" ng-click="today()">Today</button>
-                    <button type="button" class="btn btn-sm btn-default" ng-click="dt = '2009-08-24'">2009-08-24</button>
-                    <button type="button" class="btn btn-sm btn-danger" ng-click="clear()">Clear</button>
-                    <button type="button" class="btn btn-sm btn-default" ng-click="toggleMin()" tooltip="After today restriction">Min date</button>
-                </ons-col>
-            </ons-row>
-        </ons-page>
-    </ons-template>
-
-    <ons-template id="page2.html">
-        <ons-page>
-            <ons-toolbar>
-                <div class="left">
-                    <ons-toolbar-button ng-click="menu.toggle()">
-                        <ons-icon icon="ion-navicon" size="28px" fixed-width="false"></ons-icon>
-                    </ons-toolbar-button>
-                </div>
-                <div class="center">Page 2</div>
-            </ons-toolbar>
-
-
-            <ons-row style="margin-top: 100px; text-align: center;">
-                <ons-col>
-                    <ons-button modifier="light" ng-click="menu.toggleMenu()">
-                        Toggle Menu
-                    </ons-button>
-                </ons-col>
-            </ons-row>
-
-        </ons-page>
-    </ons-template>
+</ons-page>
 </body>
 </html>
