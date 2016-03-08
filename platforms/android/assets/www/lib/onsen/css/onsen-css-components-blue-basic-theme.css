@@ -390,10 +390,10 @@ h6 {
   user-select: none;
   z-index: 2;
   display: block;
-  height: 44px;
+  height: 55px;
   padding-left: 0;
   padding-right: 0;
-  background: #fff;
+  background: #ff6a63;
   color: #1f1f21;
   -webkit-box-shadow: none;
   box-shadow: none;
@@ -440,7 +440,7 @@ h6 {
   background: transparent;
   border: none;
   line-height: normal;
-  height: 44px;
+  height: 55px;
   vertical-align: top;
   overflow: visible;
   display: block;
@@ -469,7 +469,7 @@ h6 {
   line-height: 44px;
   font-size: 17px;
   font-weight: 500;
-  color: #1f1f21;
+  color: #fff;
   margin: 0;
   padding: 0;
   overflow: visible;
@@ -1516,7 +1516,7 @@ h6 {
   margin: 0;
   padding: 0;
   height: 49px;
-  background-color: #222;
+  background-color: #515d6c;
   border-top: 1px solid rgba(0,0,0,0);
   width: 100%;
 }
@@ -1642,17 +1642,17 @@ h6 {
   padding: 0;
 }
 .tab-bar__button {
-  color: #999;
+  color: #e6e6e6;
 }
 :checked + .tab-bar__button {
-  color: #7abfff;
+  color: #ff6f67;
   background-color: transparent;
   -webkit-box-shadow: none;
   box-shadow: none;
   border-top: none;
 }
 :checked + .tab-bar__button > .tab-bar__icon {
-  color: #7abfff;
+  color: #ff6f67;
 }
 .tab-bar__button:disabled {
   opacity: 0.3;
@@ -2550,7 +2550,7 @@ h6 {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   display: block;
-  padding: 0 10px 0 10px;
+  /* padding: 0 10px 0 10px; */
   margin: 0 0 0 0;
   border-top: none;
   border-bottom: 1px solid #ddd;
@@ -2760,11 +2760,7 @@ h6 {
     </ul>
  */
 .list--inset {
-  margin-left: 8px;
-  margin-right: 8px;
-  border: 1px solid #ddd;
-  -webkit-border-radius: 4px;
-  border-radius: 4px;
+  border-bottom: 1px solid #ddd;
   background-image: none;
 }
 .list--inset__item:not(:last-child) {
@@ -2801,7 +2797,7 @@ h6 {
   line-height: 44px;
 }
 .radio-button--list-item__checkmark {
-  margin-top: 10px;
+  /*margin-top: 10px; */
 }
 /* topdoc
   name: Checkbox in List Item
@@ -3495,7 +3491,7 @@ input[type="search"].search-input::-webkit-search-cancel-button {
   height: 44px;
   line-height: 44px;
   outline: none;
-  color: rgba(24,103,194,0.81);
+  color: #ff6a63;
 }
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   .alert-dialog-button {

@@ -6,29 +6,60 @@
     <meta charset="utf-8" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="msapplication-tap-highlight" content="no" />
 
     <!-- JS dependencies (order matters!) -->
     <script src="scripts/platformOverrides.js"></script>
     <script src="lib/angular/angular.js"></script>
     <script src="lib/onsen/js/onsenui.js"></script>
 
+
+
+    <!--
+    <!--Import materialize.css
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css" media="screen,projection" />
+    <!--Import Google Icon Font
+      <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+     -->
+
     <!-- CSS dependencies -->
     <link rel="stylesheet" href="lib/onsen/css/onsenui.css" />
     <link rel="stylesheet" href="lib/onsen/css/onsen-css-components-blue-basic-theme.css" />
 
-    <!-- CSP support mode (required for Windows Universal apps) -->
-    <link rel="stylesheet" href="lib/angular/angular-csp.css" />
-    <link rel="stylesheet" href="css/justifiedGallery.css" />
+    <!-- Anypicker -->
+    <link rel="stylesheet" type="text/css" href="src/anypicker-font.css" />
+    <link rel="stylesheet" type="text/css" href="src/anypicker.css" />
 
-    <script src="js/jquery.justifiedGallery.js"></script>
+    <link rel="stylesheet" type="text/css" href="src/anypicker-ios.css" />
+    <link rel="stylesheet" type="text/css" href="src/anypicker-android.css" />
+    <link rel="stylesheet" type="text/css" href="src/anypicker-windows.css" />
+    <script type="text/javascript" src="src/vendors/jquery-1.11.1.min.js"></script>
 
+    <script type="text/javascript" src="src/anypicker.js"></script>
     <!-- --------------- App init --------------- -->
     <script src="js/app.js"></script>
-    <script src="js/hammer.min.js"></script>
 
-    <title>Onsen UI Master-Details</title>
+    <title>Events</title>
 
     <style>
+        .list-event-icon {
+            margin-top: 40%
+        }
+        
+        .modal-button-color {
+            background-color: #ff6a63;
+        }
+        
+        .item-icon-color {
+            color: #ff6a63;
+            font-size: 25px;
+            font-weight: 500;
+        }
+        
+        .toolbar-button--quiet {
+            color: white;
+        }
+        
         .item {
             padding: 10px;
             line-height: 1;
@@ -88,6 +119,27 @@
         .formarea {
             width: 90%;
             margin: 20px auto 0px auto;
+        }
+        
+        option {
+            color: #aba9a9;
+            height: 40px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        
+        option disabled {
+            color: #aba9a9;
+            height: 40px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        
+        select {
+            color: #aba9a9;
+            height: 40px;
+            padding-top: 10px;
+            padding-bottom: 10px;
         }
         
         input[type=text],
@@ -160,26 +212,29 @@
             width: 345px;
         }
     </style>
+
 </head>
 
 <body ng-controller="AppController">
     <!-- Cordova reference -->
-    <script src="cordova.js"></script>
-    <script src="scripts/index.js"></script>
+    <!--<script src="cordova.js"></script>-->
+    <!--<script src="scripts/index.js"></script>-->
     <!-- -->
 
     <!-- Home page -->
     <ons-navigator var="navi">
-        <ons-tabbar style="background-color:white;">
-            <ons-tab page="events.html" label="Events" icon="ion-ios-home" active="true" style="background-color:white;">
+
+        <ons-tabbar modifier="material">
+            <ons-tab page="events.html" label="Events" icon="ion-ios-home" active="true">
             </ons-tab>
 
-            <ons-tab page="today.html" label="Today" icon="ion-ios-paper" style="background-color:white;">
+            <ons-tab page="today.html" label="Today" icon="ion-ios-paper">
             </ons-tab>
 
-            <ons-tab page="profile.html" label="Profile" icon="ion-ios-person" style="background-color:white;">
+            <ons-tab page="profile.html" label="Profile" icon="ion-ios-person">
             </ons-tab>
         </ons-tabbar>
+
     </ons-navigator>
     <!-- Home page end -->
 
@@ -190,53 +245,51 @@
                 <div class="left">
                     <ons-back-button>Back</ons-back-button>
                 </div>
-                <div class="center">Details</div>
-                <div class="right" style="color:#4e81ba">
-                    <ons-toolbar-button>
-                        Edit
+                <div class="center" style="color:white">Details</div>
+                <div class="right">
+                    <ons-toolbar-button onclick="">
+                        <ons-icon icon="ion-ios-redo" fixed-width="false" style="font-size: 26px; vertical-align: -4px;color: white"></ons-icon>
                     </ons-toolbar-button>
                 </div>
             </ons-toolbar>
-
-            <ons-list modifier="inset" style="margin-top: 10px">
+            <ons-list modifier="inset">
                 <ons-list-item class="item">
                     <ons-row>
                         <ons-col width="60px">
-                            <div class="item-thum"></div>
+                            <div class="list-event-icon"><img src="img/event-type/bussiness.png" height="50px" width="50px"></div>
                         </ons-col>
                         <ons-col>
                             <header>
-                                <span class="item-title" style="font-size:20px;color:#4e81ba;">Interview day</span>
+                                <span class="item-icon-color">Interview day</span>
                                 <!--
                                 <span class="item-label">FPT University</span>
                                 -->
                             </header>
                             <p class="item-desc">
-                                <ons-icon icon="ion-ios-location" style="color:#4e81ba;" size="20px"></ons-icon>
+                                <ons-icon icon="ion-ios-location" class="item-icon-color" size="20px"></ons-icon>
                                 Fpt University
                             </p>
                             <p class="item-desc">
-                                <ons-icon icon="ion-ios-briefcase" style="color:#4e81ba;" size="20px"></ons-icon>
+                                <ons-icon icon="ion-ios-briefcase" class="item-icon-color" " size="20px "></ons-icon>
                                 Students
                             </p>
-                            <p class="item-desc">
-                                <ons-icon icon="ion-ios-calendar-outline" style="color:#4e81ba" size="20px"></ons-icon>
+                            <p class="item-desc ">
+                                <ons-icon icon="ion-ios-calendar-outline " class="item-icon-color "" size="20px"></ons-icon>
                                 30/02/2016
                             </p>
                             <p class="item-desc">
-                                <ons-icon icon="ion-ios-clock-outline" style="color:#4e81ba" size="20px"></ons-icon>
+                                <ons-icon icon="ion-ios-clock-outline" class="item-icon-color" size="20px"></ons-icon>
                                 9:30
                             </p>
                         </ons-col>
                     </ons-row>
                 </ons-list-item>
-
                 <ons-list-item modifier="chevron" ng-click="modalAddReport.show()">
-                    <ons-icon icon="ion-chatboxes" fixed-width="true" style="color: #ccc"></ons-icon>
+                    <ons-icon icon="ion-chatboxes" fixed-width="true" class="item-icon-color"></ons-icon>
                     Take report
                 </ons-list-item>
                 <ons-list-item modifier="chevron" ng-click="navi.pushPage('galery.html',{ animation : 'slide' });">
-                    <ons-icon icon="ion-ios-camera" fixed-width="true" style="color: #ccc"></ons-icon>
+                    <ons-icon icon="ion-ios-camera" fixed-width="true" class="item-icon-color"></ons-icon>
                     Photo Galery
                 </ons-list-item>
             </ons-list>
@@ -249,7 +302,7 @@
                         <ons-col width="10%">
                             <ons-button id="show-modal" modifier="light" onclick="reportDelButtonHandler()" style="border:none">
                                 <span class="label ons-button-inner">
-                                    <ons-icon icon="ion-ios-trash-outline" style="color:#4e81ba" size="20px"></ons-icon>
+                                    <ons-icon icon="ion-ios-trash-outline" class="item-icon-color" size="20px"></ons-icon>
                                 </span>
                             </ons-button>
                         </ons-col>
@@ -274,12 +327,26 @@
                                 message: 'Deleted',
                                 modifier: 'material'
                                 });
+                                
                                 break;
                             }
                         }
                         });    
                 }
             </script>
+            <!--
+            <div class="fixed-action-btn horizontal click-to-toggle" style="bottom: 45px; right: 24px;">
+                <a class="btn-floating btn-large red">
+                    <i class="large mdi-navigation-menu"></i>
+                </a>
+                <ul>
+                    <li><a class="btn-floating red"><i class="material-icons">mode_edit</i></a></li>
+                    <li><a class="btn-floating yellow darken-1"><i class="material-icons">delete</i></a></li>
+                    <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
+                    <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
+                </ul>
+            </div>
+            -->
         </ons-page>
     </ons-template>
     <!-- Detail page end -->
@@ -290,15 +357,15 @@
             <ons-toolbar>
                 <div class="left">
                     <ons-toolbar-button onclick="navi.pushPage('create.html',{ animation : 'lift' });">
-                        <ons-icon icon="ion-ios-compose-outline" fixed-width="false" style="font-size: 26px; vertical-align: -4px"></ons-icon>
+                        <ons-icon icon="ion-ios-compose-outline" fixed-width="false" style="font-size: 26px;color:white; vertical-align: -4px"></ons-icon>
                     </ons-toolbar-button>
                 </div>
-                <div class="center">
+                <div class="center" style="color:white">
                     Events
                 </div>
                 <div class="right">
                     <ons-toolbar-button onclick="navi.pushPage('search.html',{ animation : 'lift' });">
-                        <ons-icon icon="ion-ios-search" fixed-width="false" style="font-size: 26px; vertical-align: -4px;"></ons-icon>
+                        <ons-icon icon="ion-ios-search" fixed-width="false" style="font-size: 26px; vertical-align: -4px;color: white"></ons-icon>
                     </ons-toolbar-button>
                 </div>
 
@@ -309,10 +376,10 @@
             </div>
             -->
             <ons-list ng-controller="MasterController">
-                <ons-list-item modifier="chevron" class="item" ng-repeat="item in items" ng-click="showDetail($index)">
+                <ons-list-item modifier="chevron" class="item" ng-repeat="item in items" ng-click="navi.pushPage('detail.html',{ animation : 'lift' });">
                     <ons-row>
                         <ons-col width="60px">
-                            <div class="item-thum"><img src="img/default-img.png" height="50px" width="50px" class="avator"></div>
+                            <div class="list-event-icon"><img src="img/event-type/other.png" height="50px" width="50px"></div>
                         </ons-col>
                         <ons-col>
                             <header>
@@ -322,42 +389,15 @@
                                 -->
                             </header>
                             <p class="item-desc">
-                                <ons-icon icon="ion-ios-location" style="color:#4e81ba;" size="20px"></ons-icon>
+                                <ons-icon icon="ion-ios-location" style="color:#ff6c64;" size="20px"></ons-icon>
                                 Fpt University
                             </p>
                             <p class="item-desc">
-                                <ons-icon icon="ion-ios-calendar-outline" style="color:#4e81ba" size="20px"></ons-icon>
+                                <ons-icon icon="ion-ios-calendar-outline" style="color:#ff6c64" size="20px"></ons-icon>
                                 30/02/2016
                             </p>
                             <p class="item-desc">
-                                <ons-icon icon="ion-ios-clock-outline" style="color:#4e81ba" size="20px"></ons-icon>
-                                9:30
-                            </p>
-                        </ons-col>
-                    </ons-row>
-                </ons-list-item>
-                <ons-list-item modifier="chevron" class="item" ng-repeat="item in items" ng-click="showDetail($index)">
-                    <ons-row>
-                        <ons-col width="60px">
-                            <div class="item-thum"><img src="img/default-img.png" height="50px" width="50px" class="avator"></div>
-                        </ons-col>
-                        <ons-col>
-                            <header>
-                                <span class="item-title">Interview day</span>
-                                <!--
-                                <span class="item-label">FPT University</span>
-                                -->
-                            </header>
-                            <p class="item-desc">
-                                <ons-icon icon="ion-ios-location" style="color:#4e81ba;" size="20px"></ons-icon>
-                                Fpt University
-                            </p>
-                            <p class="item-desc">
-                                <ons-icon icon="ion-ios-calendar-outline" style="color:#4e81ba" size="20px"></ons-icon>
-                                30/02/2016
-                            </p>
-                            <p class="item-desc">
-                                <ons-icon icon="ion-ios-clock-outline" style="color:#4e81ba" size="20px"></ons-icon>
+                                <ons-icon icon="ion-ios-clock-outline" style="color:#ff6c64" size="20px"></ons-icon>
                                 9:30
                             </p>
                         </ons-col>
@@ -387,7 +427,7 @@
                 <ons-list-item modifier="chevron" class="item" ng-repeat="item in items" ng-click="showDetail($index)">
                     <ons-row>
                         <ons-col width="60px">
-                            <div class="item-thum"><img src="img/default-img.png" height="50px" width="50px" class="avator"></div>
+                            <div class="item-thum"><img src="img/event-type/bussiness.png" height="50px" width="50px" class="avator"></div>
                         </ons-col>
                         <ons-col>
                             <header>
@@ -397,15 +437,15 @@
                                 -->
                             </header>
                             <p class="item-desc">
-                                <ons-icon icon="ion-ios-location" style="color:#4e81ba" size="15px"></ons-icon>
+                                <ons-icon icon="ion-ios-location" style="color:#237b9f" size="15px"></ons-icon>
                                 Fpt University
                             </p>
                             <p class="item-desc">
-                                <ons-icon icon="ion-ios-calendar-outline" style="color:#4e81ba" size="25px"></ons-icon>
+                                <ons-icon icon="ion-ios-calendar-outline" style="color:#237b9f" size="25px"></ons-icon>
                                 30/02/2016
                             </p>
                             <p class="item-desc">
-                                <ons-icon icon="ion-ios-clock-outline" style="color:#4e81ba" size="15px"></ons-icon>
+                                <ons-icon icon="ion-ios-clock-outline" style="color:#237b9f" size="15px"></ons-icon>
                                 9:30
                             </p>
                         </ons-col>
@@ -419,7 +459,7 @@
     <!-- Profile page -->
     <ons-template id="profile.html">
         <ons-page>
-
+            <input type="text" id="ip-android" class="text-input--underbar width-full">
         </ons-page>
     </ons-template>
     <!-- Profile page end -->
@@ -436,7 +476,7 @@
                 </div>
                 <div class="right">
                     <ons-toolbar-button>
-                        <ons-icon icon="ion-android-done" fixed-width="false" style="font-size: 26px; vertical-align: -4px;"></ons-icon>
+                        <ons-icon icon="ion-android-done" fixed-width="false" style="font-size: 26px; vertical-align: -4px;color:white"></ons-icon>
                     </ons-toolbar-button>
                 </div>
             </ons-toolbar>
@@ -444,7 +484,7 @@
                 <div class="form-row">
                     <ons-row>
                         <ons-col width="20px">
-                            <ons-icon icon="ion-ios-chatbubble" style="color:#4e81ba;margin-top:6px"></ons-icon>
+                            <ons-icon icon="ion-ios-chatbubble-outline" style="color:#ff6a63;margin-top:6px"></ons-icon>
                         </ons-col>
                         <ons-col>
                             <input type="text" class="text-input--underbar width-full" placeholder="Your event name" value="">
@@ -455,10 +495,18 @@
                 <div class="form-row">
                     <ons-row>
                         <ons-col width="20px">
-                            <ons-icon icon="ion-ios-calendar" style="color:#4e81ba;margin-top:6px"></ons-icon>
+                            <ons-icon icon="ion-ios-information-outline" style="color:#ff6a63;margin-top:6px"></ons-icon>
                         </ons-col>
                         <ons-col>
-                            <input type="date" class="text-input--underbar width-full" value="">
+                            <select class="text-input--underbar width-full" style="color: #aba9a9;">
+                                <option value="" disabled selected style="display: none;">What's your event about?</option>
+                                <option value="birthday">Birthday</option>
+                                <option value="mting">Meeting</option>
+                                <option value="bussiness">Bussiness</option>
+                                <option value="meal">Meal</option>
+                                <option value="vacation">Vacation</option>
+                                <option value="other">Other</option>
+                            </select>
                         </ons-col>
                     </ons-row>
                 </div>
@@ -466,7 +514,25 @@
                 <div class="form-row">
                     <ons-row>
                         <ons-col width="20px">
-                            <ons-icon icon="ion-ios-clock" style="color:#4e81ba;margin-top:6px"></ons-icon>
+                            <ons-icon icon="ion-ios-calendar-outline" style="color:#ff6a63;margin-top:6px"></ons-icon>
+                        </ons-col>
+                        <ons-col>
+                            <input id="dtPicker" type="text" class="text-input--underbar width-full" >
+                            <script>
+                                        $("#dtPicker").AnyPicker(
+                                         {
+                                            mode: "datetime",
+                                            dateTimeFormat: "MMM dd, yyyy"
+                                            });
+                            </script>
+                        </ons-col>
+                    </ons-row>
+                </div>
+
+                <div class="form-row">
+                    <ons-row>
+                        <ons-col width="20px">
+                            <ons-icon icon="ion-ios-clock-outline" style="color:#ff6a63;margin-top:6px"></ons-icon>
                         </ons-col>
                         <ons-col>
                             <input type="time" class="text-input--underbar width-full" value="">
@@ -477,7 +543,7 @@
                 <div class="form-row">
                     <ons-row>
                         <ons-col width="20px">
-                            <ons-icon icon="ion-ios-briefcase" style="color:#4e81ba;margin-top:6px"></ons-icon>
+                            <ons-icon icon="ion-ios-briefcase-outline" style="color:#ff6a63;margin-top:6px"></ons-icon>
                         </ons-col>
                         <ons-col>
                             <input type="text" class="text-input--underbar width-full" placeholder="Organizer of event" value="">
@@ -488,14 +554,19 @@
                 <div class="form-row">
                     <ons-row>
                         <ons-col width="20px">
-                            <ons-icon icon="ion-ios-location" style="color:#4e81ba;margin-top:6px"></ons-icon>
+                            <ons-icon icon="ion-ios-location" style="color:#ff6a63;margin-top:6px"></ons-icon>
                         </ons-col>
                         <ons-col>
-                            <input type="text" class="text-input--underbar width-full" placeholder="Location" value="" onclick="modal.show('modal')">
+                            <input type="text" class="text-input--underbar width-full" placeholder="Location" value="">
+                        </ons-col>
+                        <ons-col width="40px">
+                            <ons-button modifier="outline" style="height:40px; width: 40px;margin: 0 auto;border-color:#ff6a63" onclick="modal.show('modal')">
+                                <ons-icon icon="ion-map" style="color:#ff6a63;margin: 0 auto;"></ons-icon>
+                            </ons-button>
+
                         </ons-col>
                     </ons-row>
                 </div>
-
             </div>
         </ons-page>
     </ons-template>
@@ -518,27 +589,32 @@
                 </div>
             </ons-toolbar>
             <div id="mygallery">
-                <a href="photo/1.jpg">
+                <a href="photo/1.jpg" title="What's your destination?">
+                    <img src="photo/1.jpg" />
                 </a>
-                <a href="photo/2.jpg">
+                <a href="photo/2.jpg" title="What's your destination?">
+                    <img src="photo/2.jpg" />
                 </a>
-                <a href="photo/3.jpg">
+                <a href="photo/3.jpg" title="What's your destination?">
+                    <img src="photo/3.jpg" />
                 </a>
-                <a href="photo/4.jpg">
+                <a href="photo/4.jpg" title="What's your destination?">
+                    <img src="photo/4.jpg" />
                 </a>
-                <a href="photo/5.jpg">
+                <a href="photo/5.jpg" title="What's your destination?">
+                    <img src="photo/5.jpg" />
                 </a>
-                <a href="photo/6.jpg">
+                <a href="photo/6.jpg" title="What's your destination?">
+                    <img src="photo/6.jpg" />
                 </a>
-                <a href="photo/7.jpg">
+                <a href="photo/7.jpg" title="What's your destination?">
+                    <img src="photo/7.jpg" />
                 </a>
-                <a href="photo/8.jpg">
+                <a href="photo/8.jpg" title="What's your destination?">
+                    <img src="photo/8.jpg" />
                 </a>
                 <!-- other images... -->
             </div>
-            <script>
-                $("#basicExample").justifiedGallery();
-            </script>
         </ons-page>
     </ons-template>
 
@@ -561,12 +637,12 @@
             <textarea class="textarea" id="txtReport" placeholder="What do you thing about this event?" style="width: 90%; height: 100px;margin-top:20px;margin-bottom:10px"></textarea>
             <ons-row>
                 <ons-col width="50%" style="margin-bottom:20px">
-                    <ons-button style="margin: 0 auto;width:50%" onclick="saveButtonHandler()">
+                    <ons-button class="modal-button-color" style="margin: 0 auto;width:50%" onclick="saveButtonHandler()">
                         Save
                     </ons-button>
                 </ons-col>
                 <ons-col width="50%" style="margin-bottom:20px">
-                    <ons-button style="margin: 0 auto;width:50%" onclick="cancelButtonHandler()">
+                    <ons-button class="modal-button-color" style="margin: 0 auto;width:50%" onclick="cancelButtonHandler()">
                         Cancel
                     </ons-button>
                 </ons-col>
@@ -720,6 +796,9 @@
     <!-- Google maps script end -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBU1HwiKv11yL7bnrg_BPwoG2QDKudzTck&libraries=places&callback=initAutocomplete"
     async defer></script>
+    <script type="text/javascript">
+
+    </script>
 </body>
 
 </html>
