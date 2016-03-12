@@ -802,7 +802,7 @@ h6 {
   letter-spacing: 0;
   color: #fff;
   vertical-align: middle;
-  background-color: rgba(24,103,194,0.81);
+  background-color: #ff6a63;
   border: 0px solid currentColor;
   -webkit-border-radius: 3px;
   border-radius: 3px;
@@ -3148,7 +3148,7 @@ input[type="search"].search-input::-webkit-search-cancel-button {
   padding: 4px 8px 0 8px;
   margin: 0;
   font-size: 15px;
-  height: 31px;
+  height: 40px;
   font-weight: 400;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;

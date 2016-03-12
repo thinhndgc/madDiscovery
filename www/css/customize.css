@@ -1,0 +1,185 @@
+.modal-text-area{
+  width: 90%;
+  height: 100px;
+  margin-top:20px;
+  margin-bottom:10px
+}
+
+.modal-content{
+  background-color:#f9f9f9;
+  width:94%; margin: 0 auto;
+  border-radius: 5px
+}
+
+.modal-map-content{
+  background-color:#f9f9f9;
+  width:100%;
+}
+
+.list-event-icon {
+  margin-top: 40%
+  }*/
+
+  .modal-button-color {
+    background-color: #ff6a63;
+  }
+
+  .item-icon-color {
+    color: #ff6a63;
+    font-size: 25px;
+    font-weight: 500;
+  }
+
+  .toolbar-button--quiet {
+    color: white;
+  }
+
+  .item {
+    padding: 10px;
+    line-height: 1;
+  }
+
+  .item-thum {
+    background-color: #ccc;
+    width: 50px;
+    height: 50px;
+    border-radius: 4px;
+  }
+
+  .item-title {
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .item-desc {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.3;
+    margin: 4px 0 0 0;
+    padding: 0 30px 0 0;
+  }
+
+  .item-label {
+    font-size: 12px;
+    color: #999;
+    float: right;
+  }
+
+  .form-row {
+    margin: 4px;
+  }
+
+  .width-full {
+    width: 100%;
+  }
+
+  .width-half {
+    width: 48%;
+  }
+
+  .lucent {
+    opacity: 0.4;
+  }
+
+  .note {
+    margin: 12px 8px;
+    font-size: 13px;
+  }
+
+  .vspc {
+    margin-top: 20px;
+  }
+
+  .formarea {
+    width: 90%;
+    margin: 20px auto 0px auto;
+  }
+
+  option {
+    color: #aba9a9;
+    height: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  option disabled {
+    color: #aba9a9;
+    height: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  select {
+    color: #aba9a9;
+    height: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  input[type=text],
+  input[type=password] {
+    color: #aba9a9;
+    height: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .timeline {
+    line-height: 1;
+    margin-top: 10px;
+  }
+
+  .timeline-li {
+    line-height: 1;
+    padding: 10px;
+  }
+
+  #map {
+            height: 92%;
+        }
+
+        .controls {
+            margin-top: 10px;
+            border: 1px solid transparent;
+            border-radius: 2px 0 0 2px;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            height: 32px;
+            outline: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        #pac-input {
+            background-color: #fff;
+            font-family: Roboto;
+            font-size: 15px;
+            font-weight: 300;
+            margin-left: 12px;
+            padding: 0 11px 0 13px;
+            text-overflow: ellipsis;
+            width: 200px;
+        }
+
+        #pac-input:focus {
+            border-color: #4d90fe;
+        }
+
+        .pac-container {
+            font-family: Roboto;
+        }
+
+        #type-selector {
+            color: #fff;
+            background-color: #4d90fe;
+            padding: 5px 11px 0px 11px;
+        }
+
+        #type-selector label {
+            font-family: Roboto;
+            font-size: 13px;
+            font-weight: 300;
+        }
+
+        #target {
+            width: 345px;
+        }
