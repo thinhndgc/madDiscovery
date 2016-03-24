@@ -36,6 +36,12 @@ var app = {
         // app.receivedEvent('deviceready');
         getConnection();
         createTable();
+        getListEvents(onSuccessful);
+        function onSuccessful(listEvents) {
+          for (var i = 0; i < listEvents.length; i++) {
+            console.log('------------' + listEvents[i].ID);
+          }
+        }
         // deteleData("other");
     },
     // Update DOM on a Received Event

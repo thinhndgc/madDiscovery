@@ -16,11 +16,10 @@ function getConnection() {
 
 function createTable(tx) {
   db.transaction(function(tx){
-    //tx.executeSql('DROP TABLE IF EXISTS Events');
-    tx.executeSql("CREATE TABLE IF NOT EXISTS TBLEvents(ID Integer PIMARY KEY, eventName TEXT, eventType TEXT, eventDate TEXT, startTime TEXT, OrgName TEXT, location TEXT, locationLat FLOAT, locationLng FLOAT);");
+    tx.executeSql("CREATE TABLE IF NOT EXISTS TBLEvents(ID Integer PRIMARY KEY, eventName TEXT, eventType TEXT, eventDate TEXT, startTime TEXT, OrgName TEXT, location TEXT, locationLat FLOAT, locationLng FLOAT);");
   },
   function (err) {
-    console.log('Create table error, error code: ' + err.code);
+    console.log('Create table error, error code: ' + err.message);
   },
   function(){
     console.log('Table created!');
@@ -57,7 +56,7 @@ function insertEvent(eventName,eventType,eventDate,startTime,OrgName,location,lo
 function getListEvents(onSuccessful) {
   db.transaction(function (tx){
     tx.executeSql("SELECT * FROM TBLEvents;", [], function(tx,rs){
-      var numberOfEvent = rs.length;
+      var numberOfEvent = rs.rows.length;
       var listEvents = [];
       for (var i = 0; i < numberOfEvent; i++) {
         listEvents.push({"ID": rs.rows.item(i).ID, "eventName": rs.rows.item(i).eventName,
@@ -67,9 +66,25 @@ function getListEvents(onSuccessful) {
         "locationLng": rs.rows.item(i).locationLng});
       }
       onSuccessful(listEvents);
+      // return listEvents;
     });
   },
   function (err) {
     console.log('Get list events error, error code: ' + err.code);
+  });
+}
+
+function checkExistEvent(eventName, eventDate, startTime, OrgName, location, onSuccessful, onFail) {
+  db.transaction(function (tx) {
+    tx.executeSql("SELECT * FROM TBLEvents WHERE eventName = ? AND eventDate = ? AND startTime = ? AND OrgName = ? AND location = ?", [eventName, eventDate, startTime, OrgName, location], function(tx, rs){
+      if (rs.rows.length == 0) {
+        onSuccessful();
+      }else {
+        onFail();
+      }
+    });
+  },
+  function(err){
+    console.log('Check events error, error code: ' + err.code);
   });
 }
