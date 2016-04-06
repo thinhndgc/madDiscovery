@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<!-- CSP support mode (required for Windows Universal apps): https://docs.angularjs.org/api/ng/directive/ngCsp -->
+<html lang="en" ng-app="app" ng-csp>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="msapplication-tap-highlight" content="no" />
+
+  <!-- JS dependencies (order matters!) -->
+  <script src="src/vendors/jquery-1.11.1.min.js" type="text/javascript"></script>
+  <script src="scripts/platformOverrides.js"></script>
+  <script src="lib/angular/angular.js"></script>
+  <script src="lib/onsen/js/onsenui.js"></script>
+
+  <!-- CSS dependencies -->
+  <link rel="stylesheet" href="lib/onsen/css/onsenui.css" />
+  <link rel="stylesheet" href="lib/onsen/css/onsen-css-components-blue-basic-theme.css" />
+
+  <!-- Mobiscroll JS and CSS Includes -->
+  <link href="css/mobiscroll.custom-2.17.1.min.css" rel="stylesheet" type="text/css" />
+  <script src="js/mobi/mobiscroll.core.js"></script>
+  <script src="js/mobi/mobiscroll.frame.js"></script>
+  <script src="js/mobi/mobiscroll.scroller.js"></script>
+
+  <script src="js/mobi/mobiscroll.util.datetime.js"></script>
+  <script src="js/mobi/mobiscroll.datetimebase.js"></script>
+  <script src="js/mobi/mobiscroll.datetime.js"></script>
+  <script src="js/mobi/mobiscroll.select.js"></script>
+  <script src="js/mobi/mobiscroll.listbase.js"></script>
+
+  <!-- <script src="js/mobiscroll.custom-2.17.1.min.js" type="text/javascript"></script> -->
+
+  <!-- Customize Css -->
+  <link rel="stylesheet" href="css/customize.css" />
+
+  <!-- --------------- App init --------------- -->
+  <script src="js/app.js"></script>
+
+  <title>Events</title>
+
+</head>
+
+<body ng-controller="AppController">
+  <!-- Home page -->
+      <ons-page>
+        <ons-toolbar>
+          <div class="left">
+            <ons-toolbar-button onclick="navi.pushPage('create.html',{ animation : 'lift' });">
+              <ons-icon icon="ion-ios-compose-outline" fixed-width="false" style="font-size: 26px;color:white; vertical-align: -4px"></ons-icon>
+            </ons-toolbar-button>
+          </div>
+          <div class="center" style="color:white">
+            Incoming Events
+          </div>
+          <div class="right">
+            <ons-toolbar-button onclick="navi.pushPage('search.html',{ animation : 'lift' });">
+              <ons-icon icon="ion-ios-search" fixed-width="false" style="font-size: 26px; vertical-align: -4px;color: white"></ons-icon>
+            </ons-toolbar-button>
+          </div>
+
+        </ons-toolbar>
+        <!-- <script type="text/javascript">
+          getConnection();
+          getListEvents(onSuccessful);
+          function onSuccessful(listEvents) {
+            var numberOfEvent = listEvents.length;
+            for (var i = 0; i < numberOfEvent; i++) {
+              console.log(listEvents[i]);
+            }
+          }
+        </script> -->
+        <ons-list id="eventList" ng-controller="MasterController">
+          <ons-list-item modifier="chevron" class="item" ng-repeat="ev in events">
+            <ons-row>
+              <ons-col width="60px">
+              <div class="list-event-icon" id="eventType"><img src="img/event-type/{{ev.eventType}}.png" height="50px" width="50px"></div>
+            </ons-col>
+            <ons-col>
+              <header>
+                <span class="item-title">{{ev.eventName}}</span>
+              </header>
+              <p class="item-desc">
+                <ons-icon icon="ion-ios-location" style="color:#ff6c64;" size="20px"></ons-icon>
+                {{ev.location}}
+              </p>
+              <p class="item-desc">
+                <ons-icon icon="ion-ios-calendar-outline" style="color:#ff6c64" size="20px"></ons-icon>
+                {{ev.eventDate}}
+              </p>
+              <p class="item-desc">
+                <ons-icon icon="ion-ios-clock-outline" style="color:#ff6c64" size="20px"></ons-icon>
+                {{ev.startTime}}
+              </p>
+            </ons-col>
+          </ons-row>
+        </ons-list-item>
+      </ons-list>
+    </ons-page>
+  <!-- Events page end -->
+<!-- Cordova reference -->
+<script src="cordova.js"></script>
+<!-- <script src="scripts/index.js"></script> -->
+<script src="js/databaseHandler.js"></script>
+<!-- <script src="js/index.js"></script> -->
+<!-- <script type="text/javascript">
+document.addEventListener("deviceready", onDeviceReady);
+function onDeviceReady() {
+  getConnection();
+  createTable();
+}
+// app.initialize();
+</script> -->
+</body>
+
+</html>

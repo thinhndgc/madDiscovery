@@ -347,7 +347,7 @@
         if (elm.next().is('input.mbsc-control')) {
             input = elm.off('.mbsc-form').next().removeAttr('tabindex');
         } else {
-            input = $('<input type="text" id="' + id + '" class="' + s.inputClass + '" readonly />');
+            input = $('<input type="text" id="' + id + '" class="text-input--underbar width-full ' + s.inputClass + '" readonly />');
 
             if (s.showInput) {
                 input.insertBefore(elm);

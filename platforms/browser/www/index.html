@@ -9,10 +9,21 @@
   <meta name="msapplication-tap-highlight" content="no" />
 
   <!-- JS dependencies (order matters!) -->
-  <script src="src/vendors/jquery-1.11.1.min.js" type="text/javascript"></script>
-  <script src="scripts/platformOverrides.js"></script>
   <script src="lib/angular/angular.js"></script>
+  <script src="scripts/platformOverrides.js"></script>
   <script src="lib/onsen/js/onsenui.js"></script>
+  <script src="src/vendors/jquery-1.11.1.min.js" type="text/javascript"></script>
+
+  <!-- Justify galery dependencies -->
+  <link rel="stylesheet" href="css/justifiedGallery.min.css" />
+  <script src="js/jquery.justifiedGallery.js"></script>
+
+  <!-- Photoswipe dependencies -->
+  <link rel="stylesheet" href="lib/photoswipe/css/photoswipe.css">
+  <link rel="stylesheet" href="lib/photoswipe/css/default-skin.css">
+  <script src="lib/photoswipe/js/photoswipe.min.js"></script>
+  <script src="lib/photoswipe/js/photoswipe-ui-default.min.js"></script>
+  <script src="js/initPhotoSwipe.js"></script>
 
   <!-- CSS dependencies -->
   <link rel="stylesheet" href="lib/onsen/css/onsenui.css" />
@@ -30,47 +41,50 @@
   <script src="js/mobi/mobiscroll.select.js"></script>
   <script src="js/mobi/mobiscroll.listbase.js"></script>
 
-  <!-- <script src="js/mobiscroll.custom-2.17.1.min.js" type="text/javascript"></script> -->
+  <script type="text/javascript" src="js/SocialSharing.js"></script>
 
   <!-- Customize Css -->
   <link rel="stylesheet" href="css/customize.css" />
-
   <!-- --------------- App init --------------- -->
+  <script src="js/databaseHandler.js"></script>
   <script src="js/app.js"></script>
 
+  <script type="text/javascript">
+
+  </script>
   <title>Events</title>
 
 </head>
+<body ng-controller="AppController">
 
-<body>
-  <!-- Home page -->
-  <ons-navigator var="navi">
-
-    <ons-tabbar modifier="material">
-      <ons-tab page="events.html" label="Events" icon="ion-ios-home" active="true">
-      </ons-tab>
-
-      <ons-tab page="today.html" label="Today" icon="ion-ios-paper">
-      </ons-tab>
-
-      <ons-tab page="profile.html" label="Profile" icon="ion-ios-person">
-      </ons-tab>
-    </ons-tabbar>
+  <ons-navigator var="navi" page="home.html">
 
   </ons-navigator>
+  <!-- Home page -->
+  <ons-template id="home.html">
+    <ons-page>
+      <ons-tabbar modifier="material">
+        <ons-tab page="events.html" label="Events" icon="ion-ios-home" active="true">
+        </ons-tab>
+        <ons-tab page="today.html" label="Today" icon="ion-ios-paper">
+        </ons-tab>
+      </ons-tabbar>
+    </ons-page>
+  </ons-template>
+
   <!-- Home page end -->
 
   <!-- Detail page -->
   <ons-template id="detail.html">
-    <ons-page ng-controller="DetailController">
+    <ons-page ng-controller="MasterController">
       <ons-toolbar>
         <div class="left">
           <ons-back-button>Back</ons-back-button>
         </div>
-        <div class="center" style="color:white">Details</div>
+        <div class="center" style="color:white">{{selectedItem.eventName}}</div>
         <div class="right">
-          <ons-toolbar-button onclick="">
-            <ons-icon icon="ion-ios-redo" fixed-width="false" style="font-size: 26px; vertical-align: -4px;color: white"></ons-icon>
+          <ons-toolbar-button id="top-right" ng-click="show('#top-right')">
+            <ons-icon icon="ion-navicon" style="color: #FFFFFF"></ons-icon>
           </ons-toolbar-button>
         </div>
       </ons-toolbar>
@@ -78,48 +92,69 @@
         <ons-list-item class="item">
           <ons-row>
             <ons-col width="60px">
-              <div class="list-event-icon"><img src="img/event-type/bussiness.png" height="50px" width="50px"></div>
+              <div class="list-event-icon"><img src="img/event-type/{{selectedItem.eventType}}.png" height="50px" width="50px"></div>
             </ons-col>
             <ons-col>
               <header>
-                <span class="item-icon-color">Interview day</span>
+                <span class="item-icon-color"></span>
               </header>
               <p class="item-desc">
                 <ons-icon icon="ion-ios-location" class="item-icon-color" size="20px"></ons-icon>
-                Fpt University
+                {{selectedItem.location}}
               </p>
               <p class="item-desc">
-                <ons-icon icon="ion-ios-briefcase" class="item-icon-color" " size="20px "></ons-icon>
-                Students
+                <ons-icon icon="ion-ios-briefcase" class="item-icon-color" size="20px"></ons-icon>
+                {{selectedItem.OrgName}}
               </p>
-              <p class="item-desc ">
-                <ons-icon icon="ion-ios-calendar-outline " class="item-icon-color "" size="20px"></ons-icon>
-                30/02/2016
+              <p class="item-desc">
+                <ons-icon icon="ion-ios-calendar-outline " class="item-icon-color" size="20px"></ons-icon>
+                {{selectedItem.eventDate}}
               </p>
               <p class="item-desc">
                 <ons-icon icon="ion-ios-clock-outline" class="item-icon-color" size="20px"></ons-icon>
-                9:30
+                {{selectedItem.startTime}}
               </p>
             </ons-col>
           </ons-row>
         </ons-list-item>
-        <ons-list-item modifier="chevron" ng-click="modalAddReport.show()">
+        <ons-list-item modifier="chevron" ng-click="reportsButtonHandler()">
           <ons-icon icon="ion-chatboxes" fixed-width="true" class="item-icon-color"></ons-icon>
-          Take report
+          View report
         </ons-list-item>
         <ons-list-item modifier="chevron" ng-click="navi.pushPage('galery.html',{ animation : 'slide' });">
           <ons-icon icon="ion-ios-camera" fixed-width="true" class="item-icon-color"></ons-icon>
           Photo Galery
         </ons-list-item>
       </ons-list>
-      <ons-list class="timeline" modifier="inset">
-        <ons-list-item class="timeline-li" ng-repeat="i in [1,2,3,4,5,6,7,8]" modifier="inset">
+      <div id="map-details" ng-controller="MapController"></div>
+    </ons-page>
+  </ons-template>
+  <!-- Detail page end -->
+
+  <!-- Report page -->
+  <ons-template id="report.html">
+    <ons-page ng-controller="MasterController">
+      <ons-toolbar>
+        <div class="left">
+          <ons-back-button>Back</ons-back-button>
+        </div>
+        <div class="center" style="color:white">Report about {{selectedItem.eventName}}</div>
+      </ons-toolbar>
+      <br/>
+      <ons-list modifier="inset">
+        <ons-list-item modifier="chevron" ng-click="modalAddReport.show()">
+          <ons-icon icon="ion-chatboxes" fixed-width="true" class="item-icon-color"></ons-icon>
+          Write report
+        </ons-list-item>
+      </ons-list>
+      <ons-list class="timeline" modifier="inset" ng-controller="ReportController">
+        <ons-list-item class="timeline-li" ng-repeat="rp in reports" modifier="inset">
           <ons-row>
             <ons-col width="90%">
-              <p class="item-desc">This is a report for this event! So awesome!</p>
+              <p class="item-desc2">{{rp.report}}</p>
             </ons-col>
             <ons-col width="10%">
-              <ons-button id="show-modal" modifier="light" onclick="reportDelButtonHandler()" style="border:none">
+              <ons-button id="show-modal" modifier="light" ng-click="reportDelButtonHandler($index)" style="border:none">
                 <span class="label ons-button-inner">
                   <ons-icon icon="ion-ios-trash-outline" class="item-icon-color" size="20px"></ons-icon>
                 </span>
@@ -128,38 +163,13 @@
           </ons-list-item>
         </ons-list>
         <br>
-        <script>
-        function reportDelButtonHandler(){
-          ons.notification.confirm({
-            message: 'Are you sure to delete?',
-            modifier: 'material',
-            callback: function(idx) {
-              switch (idx) {
-                case 0:
-                ons.notification.alert({
-                  message: 'Canceled',
-                  modifier: 'material'
-                });
-                break;
-                case 1:
-                ons.notification.alert({
-                  message: 'Deleted',
-                  modifier: 'material'
-                });
-
-                break;
-              }
-            }
-          });
-        }
-        </script>
       </ons-page>
     </ons-template>
-    <!-- Detail page end -->
+    <!-- Report page end -->
 
     <!-- Events page -->
     <ons-template id="events.html">
-      <ons-page>
+      <ons-page ng-controller="MasterController">
         <ons-toolbar>
           <div class="left">
             <ons-toolbar-button onclick="navi.pushPage('create.html',{ animation : 'lift' });">
@@ -167,7 +177,7 @@
             </ons-toolbar-button>
           </div>
           <div class="center" style="color:white">
-            Events
+            Incoming Events
           </div>
           <div class="right">
             <ons-toolbar-button onclick="navi.pushPage('search.html',{ animation : 'lift' });">
@@ -176,709 +186,1028 @@
           </div>
 
         </ons-toolbar>
-        <ons-list ng-controller="MasterController" id="eventList">
-          <ons-list-item modifier="chevron" class="item" ng-repeat="item in items" onclick="navi.pushPage('detail.html',{ animation : 'lift' });">
+        <ons-list id="eventList" ng-controller="MasterController">
+          <!-- <button onclick="window.plugins.socialsharing.share('Message only')">message only</button>
+          <button onclick="window.plugins.socialsharing.shareViaFacebook('Message via Facebook', null /* img */, null /* url */, function() {console.log('share ok')}, function(errormsg){alert(errormsg)})">msg via Facebook (with errcallback)</button> -->
+          <ons-list-item modifier="chevron" class="item" ng-repeat="ev in events" ng-click="showDetail($index)">
             <ons-row>
               <ons-col width="60px">
+                <div class="list-event-icon" id="eventType"><img src="img/event-type/{{ev.eventType}}.png" height="50px" width="50px"></div>
+              </ons-col>
+              <ons-col>
+                <header>
+                  <span class="item-title">{{ev.eventName}}</span><br/>
+                </header>
+                <p class="item-desc">
+                  <ons-icon icon="ion-ios-location" style="color:#ff6c64;" size="20px"></ons-icon>
+                  {{ev.location}}
+                </p>
+                <p class="item-desc">
+                  <ons-icon icon="ion-ios-calendar-outline" style="color:#ff6c64" size="20px"></ons-icon>
+                  {{ev.eventDate}}
+                </p>
+                <p class="item-desc">
+                  <ons-icon icon="ion-ios-clock-outline" style="color:#ff6c64" size="20px"></ons-icon>
+                  {{ev.startTime}}
+                </p>
+              </ons-col>
+            </ons-row>
+          </ons-list-item>
+        </ons-list>
+      </ons-page>
+    </ons-template>
+    <!-- Events page end -->
 
-                <!-- <script type="text/javascript">
-                var type = {{item.eventName}};
-                var imgPath = '<img src="img/event-type/' + type + '.png" height="50px" width="50px">';
-                document.getElementById("eventType").innerHTML = imgPath;
-              </script> -->
-              <div class="list-event-icon" id="eventType"><img src="img/event-type/{{item.eventType}}.png" height="50px" width="50px"></div>
-            </ons-col>
-            <ons-col>
-              <header>
-                <span class="item-title">{{item.eventName}}</span>
-              </header>
-              <p class="item-desc">
-                <ons-icon icon="ion-ios-location" style="color:#ff6c64;" size="20px"></ons-icon>
-                {{item.location}}
-              </p>
-              <p class="item-desc">
-                <ons-icon icon="ion-ios-calendar-outline" style="color:#ff6c64" size="20px"></ons-icon>
-                {{item.eventDate}}
-              </p>
-              <p class="item-desc">
-                <ons-icon icon="ion-ios-clock-outline" style="color:#ff6c64" size="20px"></ons-icon>
-                {{item.startTime}}
-              </p>
-            </ons-col>
-          </ons-row>
-        </ons-list-item>
-      </ons-list>
-    </ons-page>
-  </ons-template>
-  <!-- Events page end -->
+    <!-- Today event page -->
+    <ons-template id="today.html">
+      <ons-page ng-controller="MasterController">
+        <ons-toolbar>
+          <div class="left">
+          </div>
+          <div class="center">
+            Today
+          </div>
+          <div class="right">
+          </div>
+        </ons-toolbar>
+        <ons-list ng-controller="MasterController">
+          <ons-list-item modifier="chevron" class="item" ng-repeat="ev in todayEvents" ng-click="showTodayDetail($index)">
+            <ons-row>
+              <ons-col width="60px">
+                <div class="list-event-icon" id="eventType"><img src="img/event-type/{{ev.eventType}}.png" height="50px" width="50px"></div>
+              </ons-col>
+              <ons-col>
+                <header>
+                  <span class="item-title">{{ev.eventName}}</span>
+                </header>
+                <p class="item-desc">
+                  <ons-icon icon="ion-ios-location" style="color:#ff6c64;" size="20px"></ons-icon>
+                  {{ev.location}}
+                </p>
+                <p class="item-desc">
+                  <ons-icon icon="ion-ios-calendar-outline" style="color:#ff6c64" size="20px"></ons-icon>
+                  Today
+                </p>
+                <p class="item-desc">
+                  <ons-icon icon="ion-ios-clock-outline" style="color:#ff6c64" size="20px"></ons-icon>
+                  {{ev.startTime}}
+                </p>
+              </ons-col>
+            </ons-row>
+          </ons-list-item>
+        </ons-list>
+      </ons-page>
+    </ons-template>
+    <!-- Today event page end -->
 
-  <!-- Today event page -->
-  <ons-template id="today.html">
-    <ons-page>
-      <ons-toolbar>
-        <div class="left">
+    <!-- Create page -->
+    <ons-template id="create.html">
+      <ons-page ng-controller="createPageController">
+        <ons-toolbar>
+          <div class="left">
+            <ons-back-button>Back</ons-back-button>
+          </div>
+          <div class="center">
+            Create Event
+          </div>
+          <div class="right">
+            <ons-toolbar-button onclick="createButtonHandler();">
+              <ons-icon icon="ion-android-done" fixed-width="false" style="font-size: 26px; vertical-align: -4px;color:white"></ons-icon>
+            </ons-toolbar-button>
+          </div>
+        </ons-toolbar>
+        <div class="formarea">
+          <div class="form-row">
+            <ons-row>
+              <ons-col width="20px">
+                <ons-icon icon="ion-ios-chatbubble-outline" style="color:#ff6a63;margin-top:6px"></ons-icon>
+              </ons-col>
+              <ons-col>
+                <input type="text" id="txtName" class="text-input--underbar width-full" placeholder="Your event name">
+              </ons-col>
+            </ons-row>
+          </div>
+
+          <div class="form-row">
+            <ons-row>
+              <ons-col width="20px">
+                <ons-icon icon="ion-ios-information-outline" style="color:#ff6a63;margin-top:6px"></ons-icon>
+              </ons-col>
+              <ons-col>
+                <select class="text-input--underbar width-full" style="color: #aba9a9;" name="event-type" id="selectEventType">
+                  <option value="" disabled selected style="display: none;">What's your event about?</option>
+                  <option value="birthday">Birthday</option>
+                  <option value="meeting">Meeting</option>
+                  <option value="bussiness">Bussiness</option>
+                  <option value="meal">Meal</option>
+                  <option value="vacation">Vacation</option>
+                  <option value="other">Other</option>
+                </select>
+              </ons-col>
+            </ons-row>
+          </div>
+
+          <div class="form-row">
+            <ons-row>
+              <ons-col width="20px">
+                <ons-icon icon="ion-ios-calendar-outline" style="color:#ff6a63;margin-top:6px"></ons-icon>
+              </ons-col>
+              <ons-col>
+                <input id="txtDate" placeholder="Day of the event" class="text-input--underbar width-full" readonly/>
+              </ons-col>
+            </ons-row>
+          </div>
+
+          <div class="form-row">
+            <ons-row>
+              <ons-col width="20px">
+                <ons-icon icon="ion-ios-clock-outline" style="color:#ff6a63;margin-top:6px"></ons-icon>
+              </ons-col>
+              <ons-col>
+                <input id="txtTime" placeholder="Time start the event" class="text-input--underbar width-full" readonly/>
+              </ons-col>
+            </ons-row>
+          </div>
+
+          <div class="form-row">
+            <ons-row>
+              <ons-col width="20px">
+                <ons-icon icon="ion-ios-briefcase-outline" style="color:#ff6a63;margin-top:6px"></ons-icon>
+              </ons-col>
+              <ons-col>
+                <input type="text" id="txtOrganizer" class="text-input--underbar width-full" placeholder="Organizer of event">
+              </ons-col>
+            </ons-row>
+          </div>
+
+          <div class="form-row">
+            <ons-row>
+              <ons-col width="20px">
+                <ons-icon icon="ion-ios-location" style="color:#ff6a63;margin-top:6px"></ons-icon>
+              </ons-col>
+              <ons-col>
+                <input type="text" id="txtLocation" class="text-input--underbar width-full" placeholder="Location">
+                <input type="text" id="locLat" class="text-input--underbar width-full" style="display:none">
+                <input type="text" id="locLng" class="text-input--underbar width-full" style="display:none">
+              </ons-col>
+              <ons-col width="40px">
+                <ons-button modifier="outline" style="height:40px; width: 40px;margin: 0 auto;border-color:#ff6a63" onclick="mapButtonHandler();">
+                  <ons-icon icon="ion-map" style="color:#ff6a63;margin: 0 auto;"></ons-icon>
+                </ons-button>
+
+              </ons-col>
+            </ons-row>
+          </div>
         </div>
-        <div class="center">
-          Today
+        <script type="text/javascript">
+        function mapButtonHandler(){
+          modal.show('modal');
+          initAutocomplete();
+          setTimeout(function(){
+            bindSearch();
+          },200)
+        }
+
+        function createButtonHandler(){
+          if (checkInputData()) {
+            var name = document.getElementById('txtName').value;
+            var type = document.getElementById('selectEventType').value;
+            var date = document.getElementById('txtDate').value;
+            var time = document.getElementById('txtTime').value;
+            var ogrn = document.getElementById('txtOrganizer').value;
+            var loc = document.getElementById('txtLocation').value;
+            var locLat = document.getElementById('locLat').value;
+            var locLng = document.getElementById('locLng').value;
+            checkExistEvent(name, date, time, ogrn, loc, function(){insertEvent(name, type, date, time, ogrn, loc, locLat, locLng, function(){console.log('created event name: ' + name);createdMessase();});}, function(){ons.notification.alert({message: 'This event has existed!',title: 'Error'})});
+          }
+        }
+
+        function createdMessase() {
+          ons.notification.alert({
+            message: 'Created new event!',
+            title: '',
+            callback: function(idx) {
+              switch (idx) {
+                case 0:
+                navi.resetToPage('home.html',{ animation : 'lift' });
+                break;
+              }
+            }
+          });
+        }
+
+        function checkInputData() {
+          var name = document.getElementById('txtName').value;
+          var date = document.getElementById('txtDate').value;
+          var ogrn = document.getElementById('txtOrganizer').value;
+          var date = document.getElementById('txtDate').value;
+          var time = document.getElementById('txtTime').value;
+          var errorList = [];
+          var errorMess = '';
+          var errorFieldName = ['Event name','Event date', 'Ogranizer of event'];
+          var inputData = [name,date,ogrn];
+          for (var i = 0; i < inputData.length; i++) {
+            if (inputData[i] == '') {
+              errorList.push(i);
+            }
+          }
+          if (errorList.length == 0) {
+            if (checkEventDate(date)) {
+              console.log('Date ok');
+              if (time != '' && checkDateForCheckTime(date) == false) {
+                console.log('check time start' + time);
+                if (checkEventTime(time) == false) {
+                  errorMess = "Your event start time is wrong!";
+                  showError(errorMess);
+                  return false;
+                }else {
+                  console.log('Time ok');
+                  return true;
+                }
+              }else if (time == '') {
+                errorMess = "Event start time can't null!";
+                showError(errorMess);
+                return false;
+              }else {
+                return true;
+              }
+            }else {
+              errorMess = "Your event date is wrong!";
+              showError(errorMess);
+              return false;
+            }
+
+          }else {
+            for (var i = 0; i < errorList.length; i++) {
+              var fieldName = errorFieldName[errorList[i]];
+              errorMess = errorMess.concat(fieldName, " ,");
+            }
+            errorMess = errorMess.concat(" can't null ");
+            showError(errorMess);
+            return false;
+          }
+        }
+
+        function checkDateForCheckTime(inputDate) {
+          var currentDate = new Date();
+          var dateArray = inputDate.split("/");
+          var currentDay = currentDate.getDate();
+          var currentMonth = currentDate.getMonth() + 1;
+          var currentYear = currentDate.getFullYear();
+          var eventDay = parseInt(dateArray[1]);
+          var eventMonth = parseInt(dateArray[0]);
+          var eventYear = parseInt(dateArray[2]);
+          if ((eventMonth > currentMonth && eventYear == currentYear) || eventYear > currentYear) {
+            return true;
+          }else if ( eventYear == currentYear && eventMonth == currentMonth && eventDay > currentDay) {
+            return true;
+          }else {
+            return false;
+          }
+        }
+
+        function checkEventDate(inputDate){
+          var currentDate = new Date();
+          var dateArray = inputDate.split("/");
+          var currentDay = currentDate.getDate();
+          var currentMonth = currentDate.getMonth() + 1;
+          var currentYear = currentDate.getFullYear();
+          var eventDay = parseInt(dateArray[1]);
+          var eventMonth = parseInt(dateArray[0]);
+          var eventYear = parseInt(dateArray[2]);
+          if (eventYear < currentYear) {
+            return false;
+          }else if (eventMonth < currentMonth && eventYear == currentYear) {
+            return false;
+          }else if (eventDay < currentDay && eventMonth == currentMonth && eventYear == currentYear) {
+            return false;
+          }else {
+            return true;
+          }
+        }
+
+        function checkEventTime(eventTime) {
+          var d = new Date();
+          var currentHour = d.getHours();
+          var currentMin = d.getMinutes();
+          var timeArray = eventTime.split(":");
+          var eventHour = parseInt(timeArray[0]);
+          var eventMinArray = timeArray[1].split(" ");
+          var eventMin = parseInt(eventMinArray[0]);
+          var timeType = eventTime.split(" ")[1];
+          // console.log("current time: " + currentHour + " : " + currentMin);
+          // console.log("event hours :" + eventHour);
+          // console.log("event min :" + eventMin);
+          // console.log('time type : ' + timeType);
+          if (currentHour < 12) {
+            if (timeType == "AM") {
+              if (currentHour > eventHour) {
+                return false;
+              }else if (currentHour == eventHour && currentMin > eventMin) {
+                return false;
+              }else if (currentHour == eventHour && currentMin < eventMin) {
+                return true;
+              }else if (currentHour < eventHour) {
+                return true;
+              }
+            }else if (timeType == "PM") {
+              return true;
+            }
+          }else if (currentHour == 12) {
+            if (timeType == "AM") {
+              return false;
+            }else if (timeType == "PM") {
+              if (eventHour == 12 && eventMin < currentMin) {
+                return false;
+              }else {
+                return true;
+              }
+            }
+          }else if (currentHour > 12) {
+            if (timeType == "AM") {
+              return false;
+            }else if (timeType == "PM") {
+              eventHour = convertTime(eventHour);
+              if (eventHour < currentHour) {
+                return false;
+              }else if (eventHour == currentHour && eventMin < currentMin) {
+                return false;
+              }else if (eventHour > currentHour) {
+                return true;
+              }
+            }
+          }
+        }
+
+        function convertTime(hour) {
+          hour = hour + 12;
+          return hour;
+        }
+
+        </script>
+      </ons-page>
+    </ons-template>
+    <!-- Create page end -->
+
+    <!-- Edit page -->
+    <ons-template id="edit.html">
+      <ons-page ng-controller="editPageController">
+        <ons-toolbar>
+          <div class="left">
+            <ons-back-button>Back</ons-back-button>
+          </div>
+          <div class="center">
+            Edit {{selectedItem["eventName"]}}
+          </div>
+          <div class="right">
+            <ons-toolbar-button onclick="editButtonHandler();">
+              <ons-icon icon="ion-android-done" fixed-width="false" style="font-size: 26px; vertical-align: -4px;color:white"></ons-icon>
+            </ons-toolbar-button>
+          </div>
+        </ons-toolbar>
+        <div class="formarea">
+          <div class="form-row">
+            <ons-row>
+              <ons-col width="20px">
+                <ons-icon icon="ion-ios-chatbubble-outline" style="color:#ff6a63;margin-top:6px"></ons-icon>
+              </ons-col>
+              <ons-col>
+                <input type="text" id="txtName" class="text-input--underbar width-full" placeholder="Your event name">
+                <input type="text" id="eventID" class="text-input--underbar width-full" style="display: none">
+              </ons-col>
+            </ons-row>
+          </div>
+
+          <div class="form-row">
+            <ons-row>
+              <ons-col width="20px">
+                <ons-icon icon="ion-ios-information-outline" style="color:#ff6a63;margin-top:6px"></ons-icon>
+              </ons-col>
+              <ons-col>
+                <select class="text-input--underbar width-full" style="color: #aba9a9;" name="event-type" id="selectEventType">
+                  <option value="" disabled style="display: none;">What's your event about?</option>
+                  <option value="birthday">Birthday</option>
+                  <option value="meeting">Meeting</option>
+                  <option value="bussiness">Bussiness</option>
+                  <option value="meal">Meal</option>
+                  <option value="vacation">Vacation</option>
+                  <option value="other">Other</option>
+                </select>
+              </ons-col>
+            </ons-row>
+          </div>
+
+          <div class="form-row">
+            <ons-row>
+              <ons-col width="20px">
+                <ons-icon icon="ion-ios-calendar-outline" style="color:#ff6a63;margin-top:6px"></ons-icon>
+              </ons-col>
+              <ons-col>
+                <input id="txtDate" placeholder="Day of the event" class="text-input--underbar width-full" readonly/>
+              </ons-col>
+            </ons-row>
+          </div>
+
+          <div class="form-row">
+            <ons-row>
+              <ons-col width="20px">
+                <ons-icon icon="ion-ios-clock-outline" style="color:#ff6a63;margin-top:6px"></ons-icon>
+              </ons-col>
+              <ons-col>
+                <input id="txtTime" placeholder="Time start the event" class="text-input--underbar width-full" readonly/>
+              </ons-col>
+            </ons-row>
+          </div>
+
+          <div class="form-row">
+            <ons-row>
+              <ons-col width="20px">
+                <ons-icon icon="ion-ios-briefcase-outline" style="color:#ff6a63;margin-top:6px"></ons-icon>
+              </ons-col>
+              <ons-col>
+                <input type="text" id="txtOrganizer" class="text-input--underbar width-full" placeholder="Organizer of event">
+              </ons-col>
+            </ons-row>
+          </div>
+
+          <div class="form-row">
+            <ons-row>
+              <ons-col width="20px">
+                <ons-icon icon="ion-ios-location" style="color:#ff6a63;margin-top:6px"></ons-icon>
+              </ons-col>
+              <ons-col>
+                <input type="text" id="txtLocation" class="text-input--underbar width-full" placeholder="Location">
+                <input type="text" id="locLat" class="text-input--underbar width-full" style="display:none">
+                <input type="text" id="locLng" class="text-input--underbar width-full" style="display:none">
+              </ons-col>
+              <ons-col width="40px">
+                <ons-button modifier="outline" style="height:40px; width: 40px;margin: 0 auto;border-color:#ff6a63" onclick="mapButtonHandler();">
+                  <ons-icon icon="ion-map" style="color:#ff6a63;margin: 0 auto;"></ons-icon>
+                </ons-button>
+
+              </ons-col>
+            </ons-row>
+          </div>
         </div>
-        <div class="right">
+        <script type="text/javascript">
+        function mapButtonHandler(){
+          modal.show('modal');
+          initAutocomplete();
+          setTimeout(function(){
+            bindSearch();
+          },200)
+        }
+
+        function editButtonHandler(){
+          if (checkInputData()) {
+            var name = document.getElementById('txtName').value;
+            var type = document.getElementById('selectEventType').value;
+            var date = document.getElementById('txtDate').value;
+            var time = document.getElementById('txtTime').value;
+            var ogrn = document.getElementById('txtOrganizer').value;
+            var loc = document.getElementById('txtLocation').value;
+            var locLat = document.getElementById('locLat').value;
+            var locLng = document.getElementById('locLng').value;
+            var id = document.getElementById('eventID').value;
+            console.log("id= "+id);
+            checkExistEvent(name, date, time, ogrn, loc, function(){editEvent(name, type, date, time, ogrn, loc, locLat, locLng, id,function(){console.log('updated event name: ' + name);createdMessase();});}, function(){ons.notification.alert({message: 'This information has existed!',title: 'Error'})});
+          }
+        }
+
+        function createdMessase() {
+          ons.notification.alert({
+            message: 'Saved!',
+            title: '',
+            callback: function(idx) {
+              switch (idx) {
+                case 0:
+                navi.resetToPage('home.html',{ animation : 'lift' });
+                break;
+              }
+            }
+          });
+        }
+
+        function checkInputData() {
+          var name = document.getElementById('txtName').value;
+          var date = document.getElementById('txtDate').value;
+          var ogrn = document.getElementById('txtOrganizer').value;
+          var date = document.getElementById('txtDate').value;
+          var time = document.getElementById('txtTime').value;
+          var errorList = [];
+          var errorMess = '';
+          var errorFieldName = ['Event name','Event date', 'Ogranizer of event'];
+          var inputData = [name,date,ogrn];
+          for (var i = 0; i < inputData.length; i++) {
+            if (inputData[i] == '') {
+              errorList.push(i);
+            }
+          }
+          if (errorList.length == 0) {
+            if (checkEventDate(date)) {
+              console.log('Date ok');
+              if (time != '' && checkDateForCheckTime(date) == false) {
+                console.log('check time start' + time);
+                if (checkEventTime(time) == false) {
+                  errorMess = "Your event start time is wrong!";
+                  showError(errorMess);
+                  return false;
+                }else {
+                  console.log('Time ok');
+                  return true;
+                }
+              }else if (time == '') {
+                errorMess = "Event start time can't null!";
+                showError(errorMess);
+                return false;
+              }else {
+                return true;
+              }
+            }else {
+              errorMess = "Your event date is wrong!";
+              showError(errorMess);
+              return false;
+            }
+
+          }else {
+            for (var i = 0; i < errorList.length; i++) {
+              var fieldName = errorFieldName[errorList[i]];
+              errorMess = errorMess.concat(fieldName, " ,");
+            }
+            errorMess = errorMess.concat(" can't null ");
+            showError(errorMess);
+            return false;
+          }
+        }
+
+        function checkDateForCheckTime(inputDate) {
+          var currentDate = new Date();
+          var dateArray = inputDate.split("/");
+          var currentDay = currentDate.getDate();
+          var currentMonth = currentDate.getMonth() + 1;
+          var currentYear = currentDate.getFullYear();
+          var eventDay = parseInt(dateArray[1]);
+          var eventMonth = parseInt(dateArray[0]);
+          var eventYear = parseInt(dateArray[2]);
+          if ((eventMonth > currentMonth && eventYear == currentYear) || eventYear > currentYear) {
+            return true;
+          }else if ( eventYear == currentYear && eventMonth == currentMonth && eventDay > currentDay) {
+            return true;
+          }else {
+            return false;
+          }
+        }
+
+        function checkEventDate(inputDate){
+          var currentDate = new Date();
+          var dateArray = inputDate.split("/");
+          var currentDay = currentDate.getDate();
+          var currentMonth = currentDate.getMonth() + 1;
+          var currentYear = currentDate.getFullYear();
+          var eventDay = parseInt(dateArray[1]);
+          var eventMonth = parseInt(dateArray[0]);
+          var eventYear = parseInt(dateArray[2]);
+          if (eventYear < currentYear) {
+            return false;
+          }else if (eventMonth < currentMonth && eventYear == currentYear) {
+            return false;
+          }else if (eventDay < currentDay && eventMonth == currentMonth && eventYear == currentYear) {
+            return false;
+          }else {
+            return true;
+          }
+        }
+
+        function checkEventTime(eventTime) {
+          var d = new Date();
+          var currentHour = d.getHours();
+          var currentMin = d.getMinutes();
+          var timeArray = eventTime.split(":");
+          var eventHour = parseInt(timeArray[0]);
+          var eventMinArray = timeArray[1].split(" ");
+          var eventMin = parseInt(eventMinArray[0]);
+          var timeType = eventTime.split(" ")[1];
+          // console.log("current time: " + currentHour + " : " + currentMin);
+          // console.log("event hours :" + eventHour);
+          // console.log("event min :" + eventMin);
+          // console.log('time type : ' + timeType);
+          if (currentHour < 12) {
+            if (timeType == "AM") {
+              if (currentHour > eventHour) {
+                return false;
+              }else if (currentHour == eventHour && currentMin > eventMin) {
+                return false;
+              }else if (currentHour == eventHour && currentMin < eventMin) {
+                return true;
+              }else if (currentHour < eventHour) {
+                return true;
+              }
+            }else if (timeType == "PM") {
+              return true;
+            }
+          }else if (currentHour == 12) {
+            if (timeType == "AM") {
+              return false;
+            }else if (timeType == "PM") {
+              if (eventHour == 12 && eventMin < currentMin) {
+                return false;
+              }else {
+                return true;
+              }
+            }
+          }else if (currentHour > 12) {
+            if (timeType == "AM") {
+              return false;
+            }else if (timeType == "PM") {
+              eventHour = convertTime(eventHour);
+              if (eventHour < currentHour) {
+                return false;
+              }else if (eventHour == currentHour && eventMin < currentMin) {
+                return false;
+              }else if (eventHour > currentHour) {
+                return true;
+              }
+            }
+          }
+        }
+
+        function convertTime(hour) {
+          hour = hour + 12;
+          return hour;
+        }
+
+        </script>
+      </ons-page>
+    </ons-template>
+    <!-- Edit page end -->
+
+    <!-- Photo Galery page -->
+    <ons-template id="galery.html">
+      <ons-page ng-controller="GaleryController">
+        <ons-toolbar>
+          <div class="left">
+            <ons-back-button>Back</ons-back-button>
+          </div>
+          <div class="center">
+            Galery
+          </div>
+          <div class="right">
+            <ons-toolbar-button id="right" ng-click="show('#right')">
+              <ons-icon icon="ion-ios-camera" fixed-width="false" style="font-size: 26px; vertical-align: -4px; color: #FFF"></ons-icon>
+            </ons-toolbar-button>
+          </div>
+        </ons-toolbar>
+        <div id="mygallery">
+
         </div>
-      </ons-toolbar>
-      <div class="search-bar">
-        <input type="search" class="search-input" style="width: 96%; margin: 6px auto 6px auto;" placeholder="Search">
-      </div>
-      <ons-list ng-controller="MasterController">
-        <ons-list-item modifier="chevron" class="item" ng-repeat="item in items" ng-click="showDetail($index)">
-          <ons-row>
-            <ons-col width="60px">
-              <div class="item-thum"><img src="img/event-type/bussiness.png" height="50px" width="50px" class="avator"></div>
-            </ons-col>
-            <ons-col>
-              <header>
-                <span class="item-title">Interview day</span>
-                <!--
-                <span class="item-label">FPT University</span>
-              -->
-            </header>
-            <p class="item-desc">
-              <ons-icon icon="ion-ios-location" style="color:#237b9f" size="15px"></ons-icon>
-              Fpt University
-            </p>
-            <p class="item-desc">
-              <ons-icon icon="ion-ios-calendar-outline" style="color:#237b9f" size="25px"></ons-icon>
-              30/02/2016
-            </p>
-            <p class="item-desc">
-              <ons-icon icon="ion-ios-clock-outline" style="color:#237b9f" size="15px"></ons-icon>
-              9:30
-            </p>
-          </ons-col>
-        </ons-row>
-      </ons-list-item>
-    </ons-list>
-  </ons-page>
-</ons-template>
-<!-- Today event page end -->
+      </ons-page>
+    </ons-template>
 
-<!-- Profile page -->
-<ons-template id="profile.html">
-  <ons-page>
+    <!-- Location modal -->
+    <ons-modal var="modal">
+      <div id="search-box"></div>
+      <div id="map"></div>
+      <div class="modal-map-content">
+        <ons-button class="modal-button-color" style="margin: 0 auto;margin-top:10px; margin-bottom:10px" onclick="locationButtonHandler();">
+          Done
+        </ons-button>
+      </div>
+      <script type="text/javascript">
 
-  </ons-page>
-</ons-template>
-<!-- Profile page end -->
+      function locationButtonHandler(){
+        getMakerPosition();
+        modal.hide();
+      }
+      </script>
+    </ons-modal>
+    <!-- Location modal end -->
 
-<!-- Create page -->
-<ons-template id="create.html">
-  <ons-page>
-    <ons-toolbar>
-      <div class="left">
-        <ons-back-button>Back</ons-back-button>
-      </div>
-      <div class="center">
-        Create Event
-      </div>
-      <div class="right">
-        <ons-toolbar-button onclick="createButtonHandler();">
-          <ons-icon icon="ion-android-done" fixed-width="false" style="font-size: 26px; vertical-align: -4px;color:white"></ons-icon>
-        </ons-toolbar-button>
-      </div>
-    </ons-toolbar>
-    <div class="formarea">
-      <div class="form-row">
+    <!-- Menu pophover -->
+    <ons-template id="popover.html">
+      <ons-popover cancelable direction="down" ng-controller="PopoverController">
+        <ons-list>
+          <ons-list-item modifier="tappable" ng-click="editHandler()">
+            <ons-row>
+              <ons-col width="10%">
+                <ons-button id="show-modal" modifier="light" style="border:none">
+                  <span class="label ons-button-inner">
+                    <ons-icon icon="ion-edit" class="item-icon-color" size="20px"></ons-icon>
+                  </span>
+                </ons-button>
+              </ons-col>
+              <ons-col width="90%">
+                <p class="item-desc2">Edit</p>
+              </ons-col>
+            </ons-row>
+          </ons-list-item>
+          <ons-list-item modifier="tappable" ng-click="deleteHandler()">
+            <ons-row>
+              <ons-col width="10%">
+                <ons-button id="show-modal" modifier="light" style="border:none">
+                  <span class="label ons-button-inner">
+                    <ons-icon icon="ion-ios-trash-outline" class="item-icon-color" size="20px"></ons-icon>
+                  </span>
+                </ons-button>
+              </ons-col>
+              <ons-col width="90%">
+                <p class="item-desc2">Delete</p>
+              </ons-col>
+            </ons-row>
+          </ons-list-item>
+          <ons-list-item modifier="tappable">
+            <ons-row>
+              <ons-col width="10%">
+                <ons-button id="show-modal" modifier="light" style="border:none">
+                  <span class="label ons-button-inner">
+                    <ons-icon icon="ion-social-facebook" class="item-icon-color" size="20px"></ons-icon>
+                  </span>
+                </ons-button>
+              </ons-col>
+              <ons-col width="90%">
+                <p class="item-desc2">Share to facebook</p>
+              </ons-col>
+            </ons-row>
+          </ons-list-item>
+        </ons-list>
+      </ons-popover>
+    </ons-template>
+    <!-- Menu pophover end -->
+
+    <!-- Menu pophover for picture -->
+    <ons-template id="popoverImg.html">
+      <ons-popover cancelable direction="down" ng-controller="PopoverController">
+        <ons-list>
+          <ons-list-item modifier="tappable" ng-click="captureHandler()">
+            <ons-row>
+              <ons-col width="10%">
+                <ons-button id="show-modal" modifier="light" style="border:none">
+                  <span class="label ons-button-inner">
+                    <ons-icon icon="ion-camera" class="item-icon-color" size="20px"></ons-icon>
+                  </span>
+                </ons-button>
+              </ons-col>
+              <ons-col width="90%">
+                <p class="item-desc2">Capture new photo</p>
+              </ons-col>
+            </ons-row>
+          </ons-list-item>
+          <ons-list-item modifier="tappable" ng-click="chooseHandler()">
+            <ons-row>
+              <ons-col width="10%">
+                <ons-button id="show-modal" modifier="light" style="border:none">
+                  <span class="label ons-button-inner">
+                    <ons-icon icon="ion-images" class="item-icon-color" size="20px"></ons-icon>
+                  </span>
+                </ons-button>
+              </ons-col>
+              <ons-col width="90%">
+                <p class="item-desc2">Choose from galery</p>
+              </ons-col>
+            </ons-row>
+          </ons-list-item>
+        </ons-list>
+      </ons-popover>
+    </ons-template>
+    <!-- Menu pophover for picture end -->
+
+    <!-- Add report modal -->
+    <ons-modal var="modalAddReport" ng-controller="ReportController">
+      <div class="content modal-content">
+        <textarea class="textarea modal-text-area" id="txtReport" placeholder="What do you thing about this event?"></textarea>
         <ons-row>
-          <ons-col width="20px">
-            <ons-icon icon="ion-ios-chatbubble-outline" style="color:#ff6a63;margin-top:6px"></ons-icon>
-          </ons-col>
-          <ons-col>
-            <input type="text" id="txtName" class="text-input--underbar width-full" placeholder="Your event name">
-          </ons-col>
-        </ons-row>
-      </div>
-
-      <div class="form-row">
-        <ons-row>
-          <ons-col width="20px">
-            <ons-icon icon="ion-ios-information-outline" style="color:#ff6a63;margin-top:6px"></ons-icon>
-          </ons-col>
-          <ons-col>
-            <select class="text-input--underbar width-full" style="color: #aba9a9;" name="event-type" id="selectEventType">
-              <option value="" disabled selected style="display: none;">What's your event about?</option>
-              <option value="birthday">Birthday</option>
-              <option value="meeting">Meeting</option>
-              <option value="bussiness">Bussiness</option>
-              <option value="meal">Meal</option>
-              <option value="vacation">Vacation</option>
-              <option value="other">Other</option>
-            </select>
-            <script type="text/javascript">
-            $(function () {
-              $('#selectEventType').mobiscroll().select({
-                theme: '',
-                display: 'modal',
-                minWidth: 200
-              });
-              $('#selectEventType').click(function () {
-                $('#selectEventType').mobiscroll('show');
-                return false;
-              });
-            });
-            </script>
-          </ons-col>
-        </ons-row>
-      </div>
-
-      <div class="form-row">
-        <ons-row>
-          <ons-col width="20px">
-            <ons-icon icon="ion-ios-calendar-outline" style="color:#ff6a63;margin-top:6px"></ons-icon>
-          </ons-col>
-          <ons-col>
-            <input id="txtDate" placeholder="Day of the event" class="text-input--underbar width-full" readonly/>
-            <script type="text/javascript">
-            $(function () {
-
-              $('#txtDate').mobiscroll().date({
-                theme: '',
-                display: 'modal'
-              });
-
-              $('#txtDate').click(function () {
-                $('#txtDate').mobiscroll('show');
-                return false;
-              });
-            });
-            </script>
-          </ons-col>
-        </ons-row>
-      </div>
-
-      <div class="form-row">
-        <ons-row>
-          <ons-col width="20px">
-            <ons-icon icon="ion-ios-clock-outline" style="color:#ff6a63;margin-top:6px"></ons-icon>
-          </ons-col>
-          <ons-col>
-            <input id="txtTime" placeholder="Time start the event" class="text-input--underbar width-full" readonly/>
-            <script type="text/javascript">
-            $(function () {
-              $('#txtTime').mobiscroll().time({
-                theme: '',
-                display: 'modal'
-              });
-
-              $('#txtTime').click(function () {
-                $('#txtTime').mobiscroll('show');
-                return false;
-              });
-            });
-            </script>
-          </ons-col>
-        </ons-row>
-      </div>
-
-      <div class="form-row">
-        <ons-row>
-          <ons-col width="20px">
-            <ons-icon icon="ion-ios-briefcase-outline" style="color:#ff6a63;margin-top:6px"></ons-icon>
-          </ons-col>
-          <ons-col>
-            <input type="text" id="txtOrganizer" class="text-input--underbar width-full" placeholder="Organizer of event">
-          </ons-col>
-        </ons-row>
-      </div>
-
-      <div class="form-row">
-        <ons-row>
-          <ons-col width="20px">
-            <ons-icon icon="ion-ios-location" style="color:#ff6a63;margin-top:6px"></ons-icon>
-          </ons-col>
-          <ons-col>
-            <input type="text" id="txtLocation" class="text-input--underbar width-full" placeholder="Location">
-            <input type="text" id="locLat" class="text-input--underbar width-full" style="display:none">
-            <input type="text" id="locLng" class="text-input--underbar width-full" style="display:none">
-          </ons-col>
-          <ons-col width="40px">
-            <ons-button modifier="outline" style="height:40px; width: 40px;margin: 0 auto;border-color:#ff6a63" onclick="mapButtonHandler();">
-              <ons-icon icon="ion-map" style="color:#ff6a63;margin: 0 auto;"></ons-icon>
+          <ons-col width="50%" style="margin-bottom:20px">
+            <ons-button class="modal-button-color" style="margin: 0 auto;width:50%" ng-click="saveButtonHandler()">
+              Save
             </ons-button>
-
+          </ons-col>
+          <ons-col width="50%" style="margin-bottom:20px">
+            <ons-button class="modal-button-color" style="margin: 0 auto;width:50%" onclick="cancelButtonHandler()">
+              Cancel
+            </ons-button>
           </ons-col>
         </ons-row>
+        <script>
+        function changeBorderColor(){
+          document.getElementById('txtReport').style.boxShadow = "0px 0px 7px red";
+        }
+
+        function restoreBorderColor(){
+          document.getElementById('txtReport').style.boxShadow = "none";
+        }
+
+        function cancelButtonHandler(){
+          restoreBorderColor();
+          clearTextField('txtReport');
+          modalAddReport.hide();
+
+        }
+
+        function clearTextField(id){
+          var current = document.getElementById(id);
+          current.value = ""
+        }
+        </script>
       </div>
-    </div>
-    <script type="text/javascript">
-    function mapButtonHandler(){
-      modal.show('modal');
-      initAutocomplete();
-      setTimeout(function(){
-        bindSearch();
-      },200)
+    </ons-modal>
+    <!-- Add report modal end -->
+
+    <!-- Search page -->
+    <ons-template id="search.html">
+      <ons-page ng-controller="MasterController">
+        <ons-toolbar>
+          <div class="left">
+            <ons-back-button>Back</ons-back-button>
+          </div>
+          <div class="center">
+            Search
+          </div>
+        </ons-toolbar>
+        <div class="search-bar">
+          <input type="text" id="search" ng-model="value" ng-keydown="onKeyDown($event)" class="search-input" style="width: 96%; margin: 6px auto 6px auto;" placeholder="Search">
+        </div>
+        <ons-list id="eventList">
+          <ons-list-item modifier="chevron" class="item" ng-repeat="ev in events" ng-click="showDetail($index)">
+            <ons-row>
+              <ons-col width="60px">
+                <div class="list-event-icon" id="eventType"><img src="img/event-type/{{ev.eventType}}.png" height="50px" width="50px"></div>
+              </ons-col>
+              <ons-col>
+                <header>
+                  <span class="item-title">{{ev.eventName}}</span>
+                </header>
+                <p class="item-desc">
+                  <ons-icon icon="ion-ios-location" style="color:#ff6c64;" size="20px"></ons-icon>
+                  {{ev.location}}
+                </p>
+                <p class="item-desc">
+                  <ons-icon icon="ion-ios-calendar-outline" style="color:#ff6c64" size="20px"></ons-icon>
+                  {{ev.eventDate}}
+                </p>
+                <p class="item-desc">
+                  <ons-icon icon="ion-ios-clock-outline" style="color:#ff6c64" size="20px"></ons-icon>
+                  {{ev.startTime}}
+                </p>
+              </ons-col>
+            </ons-row>
+          </ons-list-item>
+        </ons-list>
+      </ons-page>
+    </ons-template>
+    <!-- Search page end-->
+
+    <!-- Page Script -->
+    <script>
+    function showError(detail) {
+      ons.notification.alert({
+        message: detail,
+        title: 'Error'
+      });
     }
 
-    function createButtonHandler(){
-      if (checkInputData()) {
-        var name = document.getElementById('txtName').value;
-        var type = document.getElementById('selectEventType').value;
-        var date = document.getElementById('txtDate').value;
-        var time = document.getElementById('txtTime').value;
-        var ogrn = document.getElementById('txtOrganizer').value;
-        var loc = document.getElementById('txtLocation').value;
-        var locLat = document.getElementById('locLat').value;
-        var locLng = document.getElementById('locLng').value;
-        checkExistEvent(name, date, time, ogrn, loc, function(){insertEvent(name, type, date, time, ogrn, loc, locLat, locLng, function(){console.log('created event name: ' + name);createdMessase();});}, function(){ons.notification.alert({message: 'This event has existed!',title: 'Error'})});
+    function showAlert(detail){
+      ons.notification.alert({
+        message: detail
+      });
+    }
+
+    function checkNullInput(inputId){
+      var value = document.getElementById(inputId).value;
+      if(!value.match(/\S/)){
+        return true;
+      }
+    }
+    </script>
+    <!-- Page Script end -->
+
+    <!-- Google maps script -->
+    <script>
+    var map = null;
+    var currentMarker = null;
+
+
+
+    function getMakerPosition() {
+      var locationName = null;
+      alert("1st step" + locationName);
+      if (currentMarker == null) {
+        alert('null');
+
+      }else {
+        var pos = currentMarker[0].getPosition();
+        map.setCenter(pos);
+        GetAddress(pos.lat(),pos.lng());
       }
     }
 
-    function createdMessase() {
-      ons.notification.alert({
-        message: 'Created new event!',
-        title: '',
-        callback: function(idx) {
-          switch (idx) {
-            case 0:
-            navi.popPage({onTransitionEnd : function() {
-              nav.replacePage('events.html', { animation : 'none' } );
-            }})
-            break;
+    function GetAddress(lat,lng) {
+      var latlng = new google.maps.LatLng(lat, lng);
+      var geocoder = geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ 'latLng': latlng }, function (results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+          if (results[1]) {
+            var locName = results[1].formatted_address;
+            // alert(locName);
+            // return results[1].formatted_address;
+            document.getElementById('txtLocation').value = locName;
+            document.getElementById('locLat').value = lat;
+            document.getElementById('locLng').value = lng;
           }
         }
       });
     }
 
-    function checkInputData() {
-      var name = document.getElementById('txtName').value;
-      var date = document.getElementById('txtDate').value;
-      var ogrn = document.getElementById('txtOrganizer').value;
-      var date = document.getElementById('txtDate').value;
-      var time = document.getElementById('txtTime').value;
-      var errorList = [];
-      var errorMess = '';
-      var errorFieldName = ['Event name','Event date', 'Ogranizer of event'];
-      var inputData = [name,date,ogrn];
-      for (var i = 0; i < inputData.length; i++) {
-        if (inputData[i] == '') {
-          errorList.push(i);
-        }
-      }
-      if (errorList.length == 0) {
-        if (checkEventDate(date)) {
-          console.log('Date ok');
-          if (time != '' && checkDateForCheckTime(date) == false) {
-            console.log('check time start' + time);
-            if (checkEventTime(time) == false) {
-              errorMess = "Your event start time is wrong!";
-              showError(errorMess);
-              return false;
-            }else {
-              console.log('Time ok');
-              return true;
-            }
-          }else {
-            return true;
-          }
-        }else {
-          errorMess = "Your event date is wrong!";
-          showError(errorMess);
-          return false;
-        }
+    function initAutocomplete() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: 21.0277644, lng: 105.83415979999995},
+        zoom: 13,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      });
 
-      }else {
-        for (var i = 0; i < errorList.length; i++) {
-          var fieldName = errorFieldName[errorList[i]];
-          errorMess = errorMess.concat(fieldName, " ,");
-        }
-        errorMess = errorMess.concat(" can't null ");
-        showError(errorMess);
-        return false;
-      }
+      // [END region_getplaces]
     }
 
-    function checkDateForCheckTime(inputDate) {
-      var currentDate = new Date();
-      var dateArray = inputDate.split("/");
-      var currentDay = currentDate.getDate();
-      var currentMonth = currentDate.getMonth() + 1;
-      var currentYear = currentDate.getFullYear();
-      var eventDay = parseInt(dateArray[1]);
-      var eventMonth = parseInt(dateArray[0]);
-      var eventYear = parseInt(dateArray[2]);
-      if (eventMonth > currentMonth || eventYear > currentYear) {
-        return true;
-      }else if ( eventYear == currentYear && eventMonth == currentMonth && eventDay > currentDay) {
-        return true;
-      }else {
-        return false;
-      }
-    }
+    function bindSearch(){
 
-    function checkEventDate(inputDate){
-      var currentDate = new Date();
-      var dateArray = inputDate.split("/");
-      var currentDay = currentDate.getDate();
-      var currentMonth = currentDate.getMonth() + 1;
-      var currentYear = currentDate.getFullYear();
-      var eventDay = parseInt(dateArray[1]);
-      var eventMonth = parseInt(dateArray[0]);
-      var eventYear = parseInt(dateArray[2]);
-      if (eventYear < currentYear) {
-        return false;
-      }else if (eventMonth < currentMonth) {
-        return false;
-      }else if (eventDay < currentDay) {
-        return false;
-      }else {
-        return true;
-      }
-    }
+      $(".modal #search-box").html('<input id="pac-input" class="controls" type="text" placeholder="Search">');
+      // Create the search box and link it to the UI element.
+      var input = document.getElementById('pac-input');
+      var searchBox = new google.maps.places.SearchBox(input);
+      map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
-    function checkEventTime(eventTime) {
-      var d = new Date();
-      var currentHour = d.getHours();
-      var currentMin = d.getMinutes();
-      var timeArray = eventTime.split(":");
-      var eventHour = parseInt(timeArray[0]);
-      var eventMinArray = timeArray[1].split(" ");
-      var eventMin = parseInt(eventMinArray[0]);
-      var timeType = eventTime.split(" ")[1];
-      // console.log("current time: " + currentHour + " : " + currentMin);
-      // console.log("event hours :" + eventHour);
-      // console.log("event min :" + eventMin);
-      // console.log('time type : ' + timeType);
-      if (currentHour < 12) {
-        if (timeType == "AM") {
-          if (currentHour > eventHour) {
-            return false;
-          }else if (currentHour == eventHour && currentMin > eventMin) {
-            return false;
-          }else if (currentHour == eventHour && currentMin < eventMin) {
-            return true;
-          }else if (currentHour < eventHour) {
-            return true;
-          }
-        }else if (timeType == "PM") {
-          return true;
+      // Bias the SearchBox results towards current map's viewport.
+      map.addListener('bounds_changed', function() {
+        searchBox.setBounds(map.getBounds());
+      });
+
+      var markers = [];
+      // [START region_getplaces]
+      // Listen for the event fired when the user selects a prediction and retrieve
+      // more details for that place.
+      searchBox.addListener('places_changed', function() {
+        var places = searchBox.getPlaces();
+
+        if (places.length == 0) {
+          return;
         }
-      }else if (currentHour == 12) {
-        if (timeType == "AM") {
-          return false;
-        }else if (timeType == "PM") {
-          if (eventHour == 12 && eventMin < currentMin) {
-            return false;
-          }else {
-            return true;
-          }
+
+        // Clear out the old markers.
+        markers.forEach(function(marker) {
+          marker.setMap(null);
+        });
+
+
+        // For each place, get the icon, name and location.
+        var bounds = new google.maps.LatLngBounds();
+        places.forEach(function(place) {
+          var icon = {
+            url: place.icon,
+            size: new google.maps.Size(71, 71),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(17, 34),
+            scaledSize: new google.maps.Size(25, 25)
+          };
+
+          // Create a marker for each place.
+          markers.push(new google.maps.Marker({
+            map: map,
+            icon: icon,
+            title: place.name,
+            position: place.geometry.location,
+            draggable: true,
+            animation: google.maps.Animation.DROP
+          })
+        );
+
+        currentMarker = markers;
+
+        if (place.geometry.viewport) {
+          // Only geocodes have viewport.
+          bounds.union(place.geometry.viewport);
+        } else {
+          bounds.extend(place.geometry.location);
         }
-      }else if (currentHour > 12) {
-        if (timeType == "AM") {
-          return false;
-        }else if (timeType == "PM") {
-          eventHour = convertTime(eventHour);
-          if (eventHour < currentHour) {
-            return false;
-          }else if (eventHour == currentHour && eventMin < currentMin) {
-            return false;
-          }else if (eventHour > currentHour) {
-            return true;
-          }
-        }
-      }
-    }
-
-    function convertTime(hour) {
-      hour = hour + 12;
-      return hour;
-    }
-
-    </script>
-  </ons-page>
-</ons-template>
-<!-- Create page end -->
-
-<!-- Photo Galery page -->
-<ons-template id="galery.html">
-  <ons-page>
-    <ons-toolbar>
-      <div class="left">
-        <ons-back-button>Back</ons-back-button>
-      </div>
-      <div class="center">
-        Galery
-      </div>
-      <div class="right">
-        <ons-toolbar-button onclick="">
-          <ons-icon icon="ion-ios-camera-outline" fixed-width="false" style="font-size: 26px; vertical-align: -4px;"></ons-icon>
-        </ons-toolbar-button>
-      </div>
-    </ons-toolbar>
-    <div id="mygallery">
-      <a href="photo/1.jpg" title="What's your destination?">
-        <img src="photo/1.jpg" />
-      </a>
-      <a href="photo/2.jpg" title="What's your destination?">
-        <img src="photo/2.jpg" />
-      </a>
-      <a href="photo/3.jpg" title="What's your destination?">
-        <img src="photo/3.jpg" />
-      </a>
-      <a href="photo/4.jpg" title="What's your destination?">
-        <img src="photo/4.jpg" />
-      </a>
-      <a href="photo/5.jpg" title="What's your destination?">
-        <img src="photo/5.jpg" />
-      </a>
-      <a href="photo/6.jpg" title="What's your destination?">
-        <img src="photo/6.jpg" />
-      </a>
-      <a href="photo/7.jpg" title="What's your destination?">
-        <img src="photo/7.jpg" />
-      </a>
-      <a href="photo/8.jpg" title="What's your destination?">
-        <img src="photo/8.jpg" />
-      </a>
-      <!-- other images... -->
-    </div>
-  </ons-page>
-</ons-template>
-
-<!-- Location modal -->
-<ons-modal var="modal">
-  <div id="search-box"></div>
-  <div id="map"></div>
-  <div class="modal-map-content">
-    <ons-button class="modal-button-color" style="margin: 0 auto;margin-top:10px; margin-bottom:10px" onclick="locationButtonHandler();">
-      Done
-    </ons-button>
-  </div>
-  <script type="text/javascript">
-
-  function locationButtonHandler(){
-    getMakerPosition();
-    modal.hide();
+      });
+      map.fitBounds(bounds);
+    });
   }
   </script>
-</ons-modal>
-<!-- Location modal end -->
 
-<!-- Add report modal -->
-<ons-modal var="modalAddReport">
-  <div class="content modal-content">
-    <textarea class="textarea modal-text-area" id="txtReport" placeholder="What do you thing about this event?"></textarea>
-    <ons-row>
-      <ons-col width="50%" style="margin-bottom:20px">
-        <ons-button class="modal-button-color" style="margin: 0 auto;width:50%" onclick="saveButtonHandler()">
-          Save
-        </ons-button>
-      </ons-col>
-      <ons-col width="50%" style="margin-bottom:20px">
-        <ons-button class="modal-button-color" style="margin: 0 auto;width:50%" onclick="cancelButtonHandler()">
-          Cancel
-        </ons-button>
-      </ons-col>
-    </ons-row>
-    <script>
-    function changeBorderColor(){
-      document.getElementById('txtReport').style.boxShadow = "0px 0px 7px red";
-    }
-
-    function restoreBorderColor(){
-      document.getElementById('txtReport').style.boxShadow = "none";
-    }
-
-    function saveButtonHandler(){
-      if(checkNullInput('txtReport')){
-        changeBorderColor();
-      }else{
-      }
-    }
-
-    function cancelButtonHandler(){
-      restoreBorderColor();
-      clearTextField('txtReport');
-      modalAddReport.hide();
-
-
-    }
-
-    function clearTextField(id){
-      var current = document.getElementById(id);
-      current.value = ""
-    }
-    </script>
-  </div>
-</ons-modal>
-<!-- Add report modal end -->
-
-<!-- Search page -->
-<ons-template id="search.html">
-  <ons-page>
-    <ons-toolbar>
-      <div class="left">
-        <ons-back-button>Back</ons-back-button>
-      </div>
-      <div class="center">
-        <div class="search-bar">
-          <input type="search" class="search-input" style="width: 100%; margin: 6px auto 6px auto;" placeholder="Search">
-        </div>
-      </div>
-    </ons-toolbar>
-  </ons-page>
-</ons-template>
-<!-- Search page end-->
-
-<!-- Page Script -->
-<script>
-function showError(detail) {
-  ons.notification.alert({
-    message: detail,
-    title: 'Error'
-  });
-}
-
-function showAlert(detail){
-  ons.notification.alert({
-    message: detail
-  });
-}
-
-function checkNullInput(inputId){
-  var value = document.getElementById(inputId).value;
-  if(!value.match(/\S/)){
-    return true;
-  }
-}
-</script>
-<!-- Page Script end -->
-
-<!-- Google maps script -->
-<script>
-var map = null;
-var currentMarker = null;
-
-
-
-function getMakerPosition() {
-  var locationName = null;
-  alert("1st step" + locationName);
-  if (currentMarker == null) {
-    alert('null');
-
-  }else {
-    var pos = currentMarker[0].getPosition();
-    map.setCenter(pos);
-    GetAddress(pos.lat(),pos.lng());
-  }
-}
-
-function GetAddress(lat,lng) {
-  var latlng = new google.maps.LatLng(lat, lng);
-  var geocoder = geocoder = new google.maps.Geocoder();
-  geocoder.geocode({ 'latLng': latlng }, function (results, status) {
-    if (status == google.maps.GeocoderStatus.OK) {
-      if (results[1]) {
-        var locName = results[1].formatted_address;
-        // alert(locName);
-        // return results[1].formatted_address;
-        document.getElementById('txtLocation').value = locName;
-        document.getElementById('locLat').value = lat;
-        document.getElementById('locLng').value = lng;
-      }
-    }
-  });
-}
-
-function initAutocomplete() {
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: 21.0277644, lng: 105.83415979999995},
-    zoom: 13,
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-  });
-
-  // [END region_getplaces]
-}
-
-function bindSearch(){
-
-  $(".modal #search-box").html('<input id="pac-input" class="controls" type="text" placeholder="Search">');
-  // Create the search box and link it to the UI element.
-  var input = document.getElementById('pac-input');
-  var searchBox = new google.maps.places.SearchBox(input);
-  map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-  // Bias the SearchBox results towards current map's viewport.
-  map.addListener('bounds_changed', function() {
-    searchBox.setBounds(map.getBounds());
-  });
-
-  var markers = [];
-  // [START region_getplaces]
-  // Listen for the event fired when the user selects a prediction and retrieve
-  // more details for that place.
-  searchBox.addListener('places_changed', function() {
-    var places = searchBox.getPlaces();
-
-    if (places.length == 0) {
-      return;
-    }
-
-    // Clear out the old markers.
-    markers.forEach(function(marker) {
-      marker.setMap(null);
-    });
-
-
-    // For each place, get the icon, name and location.
-    var bounds = new google.maps.LatLngBounds();
-    places.forEach(function(place) {
-      var icon = {
-        url: place.icon,
-        size: new google.maps.Size(71, 71),
-        origin: new google.maps.Point(0, 0),
-        anchor: new google.maps.Point(17, 34),
-        scaledSize: new google.maps.Size(25, 25)
-      };
-
-      // Create a marker for each place.
-      markers.push(new google.maps.Marker({
-        map: map,
-        icon: icon,
-        title: place.name,
-        position: place.geometry.location,
-        draggable: true,
-        animation: google.maps.Animation.DROP
-      })
-    );
-
-    currentMarker = markers;
-
-    if (place.geometry.viewport) {
-      // Only geocodes have viewport.
-      bounds.union(place.geometry.viewport);
-    } else {
-      bounds.extend(place.geometry.location);
-    }
-  });
-  map.fitBounds(bounds);
-});
-}
-</script>
-
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtOutBBYTK-vtxorIM4ivElbB4xLtu1Zo&libraries=places&callback=initAutocomplete"
-async defer></script>
-<!-- Google maps script end -->
-<!-- Cordova reference -->
-<script src="cordova.js"></script>
-<!-- <script src="scripts/index.js"></script> -->
-<script src="js/databaseHandler.js"></script>
-<!-- <script src="js/index.js"></script> -->
-<script type="text/javascript">
-document.addEventListener("deviceready", onDeviceReady);
-function onDeviceReady() {
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtOutBBYTK-vtxorIM4ivElbB4xLtu1Zo&libraries=places&callback=initAutocomplete"
+  async defer></script>
+  <!-- Google maps script end -->
+  <!-- Cordova reference -->
+  <script src="cordova.js"></script>
+  <!-- <script src="scripts/index.js"></script> -->
+  <!-- <script src="js/index.js"></script> -->
+  <!-- <script type="text/javascript">
+  document.addEventListener("deviceready", onDeviceReady);
+  function onDeviceReady() {
   getConnection();
   createTable();
+  getListTodayEvents();
 }
 // app.initialize();
-</script>
+</script> -->
 </body>
 
 </html>
