@@ -19,6 +19,10 @@
                         {
                             "xml": "<feature name=\"SocialSharing\"><param name=\"android-package\" value=\"nl.xservices.plugins.SocialSharing\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"FileOpener\"><param name=\"android-package\" value=\"com.phonegap.plugins.fileopener.FileOpener\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -28,7 +32,17 @@
                     "/*": [
                         {
                             "xml": "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />",
-                            "count": 2
+                            "count": 3
+                        }
+                    ]
+                }
+            },
+            "config.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<feature name=\"FullScreenImage\"><param name=\"android-package\" value=\"es.keensoft.fullscreenimage.FullScreenImage\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -46,6 +60,12 @@
             "PACKAGE_NAME": "com.phonegap.helloworld"
         },
         "cordova-plugin-x-socialsharing": {
+            "PACKAGE_NAME": "com.phonegap.helloworld"
+        },
+        "es.keensoft.fullscreenimage": {
+            "PACKAGE_NAME": "com.phonegap.helloworld"
+        },
+        "com.phonegap.plugins.fileopener": {
             "PACKAGE_NAME": "com.phonegap.helloworld"
         }
     },
@@ -96,12 +116,30 @@
             "clobbers": [
                 "window.plugins.socialsharing"
             ]
+        },
+        {
+            "file": "plugins/es.keensoft.fullscreenimage/www/fullscreenimage.js",
+            "id": "es.keensoft.fullscreenimage.FullScreenImage",
+            "pluginId": "es.keensoft.fullscreenimage",
+            "clobbers": [
+                "window.FullScreenImage"
+            ]
+        },
+        {
+            "file": "plugins/com.phonegap.plugins.fileopener/www/fileopener.js",
+            "id": "com.phonegap.plugins.fileopener.FileOpener",
+            "pluginId": "com.phonegap.plugins.fileopener",
+            "clobbers": [
+                "window.plugins.fileOpener"
+            ]
         }
     ],
     "plugin_metadata": {
         "cordova-plugin-whitelist": "1.2.1",
         "cordova-plugin-compat": "1.0.0",
         "cordova-plugin-camera": "2.1.2-dev",
-        "cordova-plugin-x-socialsharing": "5.0.12-dev"
+        "cordova-plugin-x-socialsharing": "5.0.12-dev",
+        "es.keensoft.fullscreenimage": "1.0.1",
+        "com.phonegap.plugins.fileopener": "1.0.0"
     }
 }

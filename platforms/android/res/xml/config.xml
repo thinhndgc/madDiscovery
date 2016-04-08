@@ -11,18 +11,23 @@
     <feature name="SocialSharing">
         <param name="android-package" value="nl.xservices.plugins.SocialSharing" />
     </feature>
+    <feature name="FileOpener">
+        <param name="android-package" value="com.phonegap.plugins.fileopener.FileOpener" />
+    </feature>
+    <feature name="FullScreenImage">
+        <param name="android-package" value="es.keensoft.fullscreenimage.FullScreenImage" />
+    </feature>
     <allow-intent href="market:*" />
-    <name>Hello World</name>
+    <name>madDiscovery</name>
     <description>
-    Hello World sample application that responds to the deviceready event.
+    An awsome event application
   </description>
-    <author email="support@phonegap.com" href="http://phonegap.com">
-    PhoneGap Team
+    <author email="ndthinh94@gmail.com">
+    ThinhND
   </author>
     <content src="index.html" />
     <preference name="orientation" value="portrait" />
     <preference name="permissions" value="none" />
-    <preference name="orientation" value="default" />
     <preference name="target-device" value="universal" />
     <preference name="fullscreen" value="true" />
     <preference name="webviewbounce" value="true" />

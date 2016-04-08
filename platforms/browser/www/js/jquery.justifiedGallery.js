@@ -99,7 +99,7 @@
    */
   JustifiedGallery.prototype.newSrc = function (imageSrc, imgWidth, imgHeight) {
     var newImageSrc;
-    
+
     if (this.settings.thumbnailPath) {
       newImageSrc = this.settings.thumbnailPath(imageSrc, imgWidth, imgHeight);
     } else {
@@ -434,7 +434,7 @@
     }
 
     //Gallery Height
-    this.$gallery.height(this.offY + this.buildingRow.height + 
+    this.$gallery.height(this.offY + this.buildingRow.height +
         this.border + (this.isSpinnerActive() ? this.getSpinnerHeight() : 0));
 
     if (!isLastRow || (this.buildingRow.height <= settings.rowHeight && buildingRowRes)) {
@@ -803,6 +803,7 @@
           // Image src
           var imageSrc = that.extractImgSrcFromImage($image);
           $image.attr('src', imageSrc);
+          // $image.attr('onClick', 'testClickImg()');
 
           /* If we have the height and the width, we don't wait that the image is loaded, but we start directly
            * with the justification */
@@ -1051,7 +1052,7 @@
         $gallery.data('jg.controller', controller);
       } else if (arg === 'norewind') {
         // In this case we don't rewind: we analyze only the latest images (e.g. to complete the last unfinished row
-        // ... left to be more readable 
+        // ... left to be more readable
       } else if (arg === 'destroy') {
         controller.destroy();
         return;
@@ -1083,7 +1084,7 @@
         }
     */
     thumbnailPath: undefined, /* If defined, sizeRangeSuffixes is not used, and this function is used to determine the
-    path relative to a specific thumbnail size. The function should accept respectively three arguments: 
+    path relative to a specific thumbnail size. The function should accept respectively three arguments:
     current path, width and height */
     rowHeight: 120,
     maxRowHeight: -1, // negative value = no limits, number to express the value in pixels,
@@ -1093,7 +1094,7 @@
     border: -1, // negative value = same as margins, 0 = disabled, any other value to set the border
 
     lastRow: 'nojustify', // … which is the same as 'left', or can be 'justify', 'center', 'right' or 'hide'
-    
+
     justifyThreshold: 0.75, /* if row width / available space > 0.75 it will be always justified
                              * (i.e. lastRow setting is not considered) */
     fixedHeight: false,

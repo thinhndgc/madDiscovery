@@ -841,6 +841,24 @@
     </ons-template>
     <!-- Edit page end -->
 
+    <!-- View image page -->
+    <ons-template id="viewImage.html">
+      <ons-page ng-controller="viewImagePageController">
+        <ons-toolbar>
+          <div class="left">
+            <ons-back-button>Back</ons-back-button>
+          </div>
+          <div class="center">
+            View image of {{selectedItem["eventName"]}}
+          </div>
+        </ons-toolbar>
+        <div class="content" id="imgView">
+          
+        </div>
+      </ons-page>
+    </ons-template>
+    <!-- View image page end -->
+
     <!-- Photo Galery page -->
     <ons-template id="galery.html">
       <ons-page ng-controller="GaleryController">
@@ -858,7 +876,9 @@
           </div>
         </ons-toolbar>
         <div id="mygallery">
-
+          <a src="{{i.path}}" ng-repeat="i in image">
+            <img id="evimg{{i.ID}}" alt="Image" src="{{i.path}}" ng-click="imgHandler($index)"/>
+          </a>
         </div>
       </ons-page>
     </ons-template>
@@ -914,20 +934,6 @@
               </ons-col>
             </ons-row>
           </ons-list-item>
-          <ons-list-item modifier="tappable">
-            <ons-row>
-              <ons-col width="10%">
-                <ons-button id="show-modal" modifier="light" style="border:none">
-                  <span class="label ons-button-inner">
-                    <ons-icon icon="ion-social-facebook" class="item-icon-color" size="20px"></ons-icon>
-                  </span>
-                </ons-button>
-              </ons-col>
-              <ons-col width="90%">
-                <p class="item-desc2">Share to facebook</p>
-              </ons-col>
-            </ons-row>
-          </ons-list-item>
         </ons-list>
       </ons-popover>
     </ons-template>
@@ -969,6 +975,57 @@
       </ons-popover>
     </ons-template>
     <!-- Menu pophover for picture end -->
+
+    <!-- Menu pophover for image -->
+    <ons-template id="popoverPic.html">
+      <ons-popover cancelable direction="down" ng-controller="PopoverController" style="width: 120px">
+        <ons-list>
+          <ons-list-item modifier="tappable" ng-click="viewHandler()">
+            <ons-row>
+              <ons-col width="10%">
+                <ons-button id="show-modal" modifier="light" style="border:none">
+                  <span class="label ons-button-inner">
+                    <ons-icon icon="ion-ios-eye" class="item-icon-color" size="20px"></ons-icon>
+                  </span>
+                </ons-button>
+              </ons-col>
+              <ons-col width="90%">
+                <p class="item-desc2">View</p>
+              </ons-col>
+            </ons-row>
+          </ons-list-item>
+          <ons-list-item modifier="tappable" ng-click="deleteImgHandler()">
+            <ons-row>
+              <ons-col width="10%">
+                <ons-button id="show-modal" modifier="light" style="border:none">
+                  <span class="label ons-button-inner">
+                    <ons-icon icon="ion-ios-close-outline" class="item-icon-color" size="20px"></ons-icon>
+                  </span>
+                </ons-button>
+              </ons-col>
+              <ons-col width="90%">
+                <p class="item-desc2">Delete</p>
+              </ons-col>
+            </ons-row>
+          </ons-list-item>
+          <ons-list-item modifier="tappable" ng-click="shareHandler()">
+            <ons-row>
+              <ons-col width="10%">
+                <ons-button id="show-modal" modifier="light" style="border:none">
+                  <span class="label ons-button-inner">
+                    <ons-icon icon="ion-social-facebook" class="item-icon-color" size="20px" style="margin-left: 5px"></ons-icon>
+                  </span>
+                </ons-button>
+              </ons-col>
+              <ons-col width="90%">
+                <p class="item-desc2">Share</p>
+              </ons-col>
+            </ons-row>
+          </ons-list-item>
+        </ons-list>
+      </ons-popover>
+    </ons-template>
+    <!-- Menu pophover for image end -->
 
     <!-- Add report modal -->
     <ons-modal var="modalAddReport" ng-controller="ReportController">
@@ -1088,10 +1145,8 @@
 
     function getMakerPosition() {
       var locationName = null;
-      alert("1st step" + locationName);
       if (currentMarker == null) {
-        alert('null');
-
+        console.log('null');
       }else {
         var pos = currentMarker[0].getPosition();
         map.setCenter(pos);

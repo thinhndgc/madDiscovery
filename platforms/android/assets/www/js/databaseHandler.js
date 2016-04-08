@@ -218,6 +218,18 @@ function deteleReport(value) {
   });
 }
 
+function deteleAllReport(value) {
+  db.transaction(function(tx){
+    tx.executeSql("DELETE FROM TBLReport WHERE eventID = ?", [value]);
+  },
+  function (err) {
+    console.log('Delete report error, error code: ' + err.code);
+  },
+  function(){
+    console.log('Deleted report!');
+  });
+}
+
 function createImageTable(tx) {
   db.transaction(function(tx){
     tx.executeSql("CREATE TABLE IF NOT EXISTS TBLImage(ID Integer PRIMARY KEY, eventID Integer, path TEXT, FOREIGN KEY(eventID) REFERENCES TBLEvents(ID));");
@@ -263,6 +275,18 @@ function getListImage(eventID, onSuccessful) {
 function deteleImage(value) {
   db.transaction(function(tx){
     tx.executeSql("DELETE FROM TBLImage WHERE ID = ?", [value]);
+  },
+  function (err) {
+    console.log('Delete image error, error code: ' + err.code);
+  },
+  function(){
+    console.log('Deleted image!');
+  });
+}
+
+function deteleAllImage(value) {
+  db.transaction(function(tx){
+    tx.executeSql("DELETE FROM TBLImage WHERE eventID = ?", [value]);
   },
   function (err) {
     console.log('Delete image error, error code: ' + err.code);

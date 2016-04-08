@@ -37,6 +37,22 @@ module.exports = [
         "clobbers": [
             "window.plugins.socialsharing"
         ]
+    },
+    {
+        "file": "plugins/es.keensoft.fullscreenimage/www/fullscreenimage.js",
+        "id": "es.keensoft.fullscreenimage.FullScreenImage",
+        "pluginId": "es.keensoft.fullscreenimage",
+        "clobbers": [
+            "window.FullScreenImage"
+        ]
+    },
+    {
+        "file": "plugins/com.phonegap.plugins.fileopener/www/fileopener.js",
+        "id": "com.phonegap.plugins.fileopener.FileOpener",
+        "pluginId": "com.phonegap.plugins.fileopener",
+        "clobbers": [
+            "window.plugins.fileOpener"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -45,7 +61,9 @@ module.exports.metadata =
     "cordova-plugin-whitelist": "1.2.1",
     "cordova-plugin-compat": "1.0.0",
     "cordova-plugin-camera": "2.1.2-dev",
-    "cordova-plugin-x-socialsharing": "5.0.12-dev"
+    "cordova-plugin-x-socialsharing": "5.0.12-dev",
+    "es.keensoft.fullscreenimage": "1.0.1",
+    "com.phonegap.plugins.fileopener": "1.0.0"
 }
 // BOTTOM OF METADATA
 });

@@ -15,6 +15,12 @@
         },
         "cordova-plugin-x-socialsharing": {
             "PACKAGE_NAME": "com.phonegap.helloworld"
+        },
+        "es.keensoft.fullscreenimage": {
+            "PACKAGE_NAME": "com.phonegap.helloworld"
+        },
+        "com.phonegap.plugins.fileopener": {
+            "PACKAGE_NAME": "com.phonegap.helloworld"
         }
     },
     "dependent_plugins": {

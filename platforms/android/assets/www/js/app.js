@@ -1,6 +1,15 @@
 (function(){
   'use strict';
   var module = angular.module('app', ['onsen']);
+  //   module.directive('myPostRepeatDirective', function() {
+  //   return function(rootScope, element, attrs) {
+  //     if (rootScope.$last){
+  //       // iteration is complete, do whatever post-processing
+  //       // is necessary
+  //       alert("done");
+  //     }
+  //   };
+  // });
   module.controller('AppController', function($scope) {});
 
   module.controller('ReportController', function($scope, $rootScope) {
@@ -10,28 +19,56 @@
       if(checkNullInput('txtReport')){
         changeBorderColor();
       }else{
-        var report = $("#txtReport").val();
-        var eventID = $rootScope.selectedItem["ID"];
-        console.log(report+" - "+eventID);
-        insertReport(eventID, report, function() {
-          console.log("created report!");
-          restoreBorderColor();
-          clearTextField('txtReport');
-          modalAddReport.hide();
-          ons.notification.alert({
-            message: 'Created report!',
-            title: '',
-            callback: function(idx) {
-              switch (idx) {
-                case 0:
-                navi.popPage();
-                break;
+        if (checkDate()) {
+          var report = $("#txtReport").val();
+          var eventID = $rootScope.selectedItem["ID"];
+          console.log(report+" - "+eventID);
+          insertReport(eventID, report, function() {
+            console.log("created report!");
+            restoreBorderColor();
+            clearTextField('txtReport');
+            modalAddReport.hide();
+            ons.notification.alert({
+              message: 'Created report!',
+              title: '',
+              callback: function(idx) {
+                switch (idx) {
+                  case 0:
+                  navi.popPage();
+                  break;
+                }
               }
-            }
+            });
           });
-        });
+        }else {
+          modalAddReport.hide();
+          ons.notification.alert({message: 'This event has ended!',title: 'Error'});
+        }
       }
     };
+
+    function checkDate(){
+      var evDate = $rootScope.selectedItem["eventDate"];
+      console.log(evDate);
+      var dateArray = evDate.split("/");
+      var currentDate = new Date();
+      console.log(currentDate);
+      var currentDay = currentDate.getDate();
+      var currentMonth = currentDate.getMonth() + 1;
+      var currentYear = currentDate.getFullYear();
+      var eventDay = parseInt(dateArray[1]);
+      var eventMonth = parseInt(dateArray[0]);
+      var eventYear = parseInt(dateArray[2]);
+      if (eventYear < currentYear) {
+        return false;
+      }else if (eventMonth < currentMonth && eventYear == currentYear) {
+        return false;
+      }else if (eventDay < currentDay && eventMonth == currentMonth && eventYear == currentYear) {
+        return false;
+      }else {
+        return true;
+      }
+    }
 
 
     function blindReportData() {
@@ -69,31 +106,39 @@
   });
 
   module.controller('GaleryController', function($scope, $rootScope) {
-    $("#mygallery").justifiedGallery();
-    // initPhotoSwipeFromDOM('#mygallery');
 
+    // initPhotoSwipeFromDOM('#mygallery');
     blindImgData();
+
     function blindImgData() {
       if (angular.isDefined($rootScope.selectedItem)) {
         var eventID = $rootScope.selectedItem["ID"];
         getListImage(eventID,function(listImage){
-          $scope.image = listImage;
+          $rootScope.image = listImage;
           $scope.$apply();
-          console.log($scope.image);
+          console.log($rootScope.image);
+          console.log(listImage.length);
+          $("#mygallery").justifiedGallery();
+          // for (var i = 0; i < listImage.length; i++) {
+          //   console.log('<a src="'+ listImage[i]["path"] +'" title="Image"> <img src="'+ listImage[i]["path"] +'" /> </a>');
+          //   $('<a src="'+ listImage[i]["path"] +'" title="Image"> <img src="'+ listImage[i]["path"] +'" /> </a>').appendTo('#mygallery');
+          //   console.log("--------------"+$('#mygallery').html());
+          // };
         });
       };
-
-      console.log(listImage.length);
-
-      for (var i = 0; i < listImage.length; i++) {
-        <a src="" title="Image">
-          <img src="{{i.path}}" />
-        </a>
-        var t = $('<a src="'+ listImage[i]["path"] +'" title="Image"> <img src="'+ listImage[i]["path"] +'" /> </a>');
-        $("#mygallery").append(t);
-      }
-
+      console.log("in here galery");
     }
+
+    $scope.imgHandler = function(index) {
+      var selectedImg = $rootScope.image[index];
+      $rootScope.selectedImg = selectedImg;
+      var imgID = selectedImg["ID"];
+      console.log("id = " + imgID);
+      console.log($("#mygallery").html());
+      var evimg = "#evimg"+imgID;
+      console.log("==== " + evimg);
+      $rootScope.popoverPic.show(evimg);
+    };
 
     ons.createPopover('popoverImg.html').then(function(popover) {
       $rootScope.popoverImg = popover;
@@ -101,6 +146,14 @@
 
     $scope.show = function(e) {
       $rootScope.popoverImg.show(e);
+    };
+
+    ons.createPopover('popoverPic.html').then(function(popover) {
+      $rootScope.popoverPic = popover;
+    });
+
+    $scope.shows = function(e) {
+      $rootScope.popoverPic.show(e);
     };
 
 
@@ -193,6 +246,14 @@
 
   });
 
+  module.controller('viewImagePageController', function($scope, $rootScope) {
+    console.log('=============================================');
+    var src = $rootScope.selectedImg["path"];
+    console.log(src);
+    $('<a src="'+ src +'" title="Image"> <img alt="Image" src="'+src+'"/> </a>').appendTo('#imgView');
+    // $('#imgView').justifiedGallery();
+    console.log("html: " + $('#imgView').html());
+  });
 
   module.controller('createPageController', function($scope, $rootScope) {
     loadPlugin();
@@ -278,156 +339,188 @@
   module.controller('PopoverController', function($scope, $rootScope) {
     var pictureSource;
     var destinationType;
-    blindImgData();
+
     document.addEventListener("deviceready", onDeviceReady, false);
     function onDeviceReady() {
       pictureSource = navigator.camera.PictureSourceType;
       destinationType = navigator.camera.DestinationType;
     }
 
-    function takePic() {
-
-      var cameraOptions = {
-        quality: 10,
-        saveToPhotoAlbum: true
-      };
-
-      navigator.camera.getPicture(cameraSuccess, cameraError, cameraOptions);
-
-      function cameraSuccess(imageData) {
-        //
-        // var img = document.getElementById("profile");
-        // img.src = imageData;
-        // imageData = "img/logo.png";
-        alert(imageData);
-        // window.plugins.socialsharing.shareViaFacebook(
-        //   'Test fb by PhoneGap',
-        //   imageData /* img */,
-        //   null /* url */,
-        //   function() {console.log('share ok')},
-        //   function(errormsg){alert(errormsg)});
-
-      }
-
-      function cameraError(msg) {
-        alert(msg);
-      }
-    }
-    function savePhoto(path) {
-      if (angular.isDefined($rootScope.selectedItem)) {
-        var eventID = $rootScope.selectedItem["ID"];
-        insertImage(eventID,path,function() {
-          $rootScope.popoverImg.hide();
-          ons.notification.alert({
-            message: 'Added image!',
-            title: '',
-            callback: function(idx) {
-              switch (idx) {
-                case 0:
-                // navi.popPage();
-                blindImgData();
-                break;
-              }
-            }
-          });
-        });
-      }
-    }
-
-    function blindImgData() {
-      if (angular.isDefined($rootScope.selectedItem)) {
-        var eventID = $rootScope.selectedItem["ID"];
-        getListImage(eventID,function(listImage){
-          $scope.image = listImage;
-          $scope.$apply();
-          console.log($scope.image);
-        });
-      };
-    }
-
-    function onPhotoDataSuccess(imageURI) {
-      console.log(imageURI);
-      // alert(imageURI);
-      var cameraImage = document.getElementById('image');
-      // Unhide image elements
-      //
-      cameraImage.style.display = 'block';
-      // Show the captured photo
-      // The inline CSS rules are used to resize the image
-      //
-      cameraImage.src = imageURI;
-      savePhoto(imageURI);
-    }
-
-    function onPhotoURISuccess(imageURI) {
-      console.log(imageURI);
-      savePhoto(imageURI);
-    }
-
-    function capturePhoto() {
-      // takePic();
-      navigator.camera.getPicture(onPhotoDataSuccess, onFail, {
-        quality: 30,
-        targetWidth: 600,
-        targetHeight: 600,
-        destinationType: destinationType.FILE_URI,
-        saveToPhotoAlbum: true
-      });
-    }
-
-    function getPhoto(source) {
-      navigator.camera.getPicture(onPhotoURISuccess, onFail, {
-        quality: 30,
-        targetWidth: 600,
-        targetHeight: 600,
-        destinationType: destinationType.FILE_URI,
-        sourceType: source
-      });
-    }
-
-    function onFail(message) {
-      //alert('Failed because: ' + message);
-    }
-    $scope.captureHandler = function() {
-      capturePhoto();
+    $scope.viewHandler = function() {
+      var src = $rootScope.selectedImg["path"];
+      console.log(src);
+      $rootScope.popoverPic.hide();
+      // FullScreenImage.showImageURL($rootScope.selectedImg["path"]);
+      window.plugins.fileOpener.open(src);
+      // navi.pushPage('viewImage.html',{ animation : 'lift' });
     };
 
-    $scope.chooseHandler = function() {
-      getPhoto(pictureSource.PHOTOLIBRARY);
-    };
-
-    $scope.deleteHandler = function() {
+    $scope.deleteImgHandler = function() {
+      // var selectedImg = $rootScope.image[index];
+      console.log($rootScope.selectedImg["ID"]+"===");
+      $rootScope.popoverPic.hide();
       ons.notification.confirm({
-        message: 'Are you sure to delete this event?',
+        message: 'Are you sure to delete?',
         modifier: 'material',
         callback: function(idx) {
           switch (idx) {
             case 0:
-            ons.notification.alert({
-              message: 'Canceled',
-              modifier: 'material'
-            });
+            console.log('canceled');
             break;
             case 1:
-            var id = $rootScope.selectedItem["ID"];
-            console.log(id);
-            deteleData(id);
-            $rootScope.popover.hide();
-            // ons.notification.alert({
-            //   message: 'Deleted',
-            //   modifier: 'material'
-            // });
-            navi.resetToPage('home.html',{ animation : 'lift' });
-
+            deteleImage($rootScope.selectedImg["ID"]);
+            // navi.popPage();
+            blindImgData();
             break;
           }
         }
       });
     };
 
-    $scope.editHandler = function() {
-      $rootScope.popover.hide();
-      navi.pushPage('edit.html',{ animation : 'lift' });
-    };
-  });
-})();
+    $scope.shareHandler = function() {
+      console.log($rootScope.selectedImg["ID"]+"===");
+      var text = 'This is a picture from ' + $rootScope.selectedItem["eventName"] + 'event!';
+      var path = $rootScope.selectedImg["path"];
+      window.plugins.socialsharing.shareViaFacebook(
+        text,
+        path /* img */,
+        null /* url */,
+        function() {
+          $rootScope.popoverPic.hide();
+          // ons.notification.alert({
+          //   message: 'This photo is shared!',
+          //   title: '',
+          //   callback: function(idx) {
+          //     switch (idx) {
+          //       case 0:
+          //       console.log('share success!');
+          //       break;
+          //     }
+          //   }
+          // });
+        },
+        function(errormsg){alert(errormsg)});
+      };
+
+      function blindImgData() {
+        if (angular.isDefined($rootScope.selectedItem)) {
+          var eventID = $rootScope.selectedItem["ID"];
+          getListImage(eventID,function(listImage){
+            $rootScope.image = listImage;
+            $scope.$apply();
+            console.log($rootScope.image);
+            console.log(listImage.length);
+            // $("#mygallery").html('');
+            // for (var i = 0; i < listImage.length; i++) {
+            //   console.log('<a src="'+ listImage[i]["path"] +'" id="'+listImage[i]["ID"]+'" class ="eventimg" title="Image"> <img src="'+ listImage[i]["path"] +'" /> </a>');
+            //   $('<a src="'+ listImage[i]["path"] +'" title="Image"> <img src="'+ listImage[i]["path"] +'" /> </a>').appendTo('#mygallery');
+            //   console.log("--------------"+$('#mygallery').html());
+            //   $("#mygallery").justifiedGallery();
+            // };
+            $("#mygallery").justifiedGallery();
+          });
+        };
+
+        console.log("in here");
+      }
+
+      function savePhoto(path) {
+        if (angular.isDefined($rootScope.selectedItem)) {
+          var eventID = $rootScope.selectedItem["ID"];
+          insertImage(eventID,path,function() {
+            $rootScope.popoverImg.hide();
+            ons.notification.alert({
+              message: 'Added image!',
+              title: '',
+              callback: function(idx) {
+                switch (idx) {
+                  case 0:
+                  // navi.popPage();
+                  blindImgData();
+                  break;
+                }
+              }
+            });
+          });
+        }
+      }
+
+      function onPhotoDataSuccess(imageURI) {
+        console.log(imageURI);
+        savePhoto(imageURI);
+      }
+
+      function onPhotoURISuccess(imageURI) {
+        console.log(imageURI);
+        savePhoto(imageURI);
+      }
+
+      function capturePhoto() {
+        // takePic();
+        navigator.camera.getPicture(onPhotoDataSuccess, onFail, {
+          quality: 30,
+          targetWidth: 600,
+          targetHeight: 600,
+          destinationType: destinationType.FILE_URI,
+          saveToPhotoAlbum: true
+        });
+      }
+
+      function getPhoto(source) {
+        navigator.camera.getPicture(onPhotoURISuccess, onFail, {
+          quality: 30,
+          targetWidth: 600,
+          targetHeight: 600,
+          destinationType: destinationType.FILE_URI,
+          sourceType: source
+        });
+      }
+
+      function onFail(message) {
+        //alert('Failed because: ' + message);
+      }
+      $scope.captureHandler = function() {
+        capturePhoto();
+      };
+
+      $scope.chooseHandler = function() {
+        getPhoto(pictureSource.PHOTOLIBRARY);
+      };
+
+      $scope.deleteHandler = function() {
+        ons.notification.confirm({
+          message: 'Are you sure to delete this event?',
+          modifier: 'material',
+          callback: function(idx) {
+            switch (idx) {
+              case 0:
+              ons.notification.alert({
+                message: 'Canceled',
+                modifier: 'material'
+              });
+              break;
+              case 1:
+              var id = $rootScope.selectedItem["ID"];
+              console.log(id);
+              deteleAllReport(id);
+              deteleAllImage(id);
+              deteleData(id);
+              $rootScope.popover.hide();
+              // ons.notification.alert({
+              //   message: 'Deleted',
+              //   modifier: 'material'
+              // });
+              navi.resetToPage('home.html',{ animation : 'lift' });
+
+              break;
+            }
+          }
+        });
+      };
+
+      $scope.editHandler = function() {
+        $rootScope.popover.hide();
+        navi.pushPage('edit.html',{ animation : 'lift' });
+      };
+    });
+  })();
