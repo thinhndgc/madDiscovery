@@ -61,11 +61,13 @@ function getListEvents(onSuccessful) {
       var numberOfEvent = rs.rows.length;
       var listEvents = [];
       for (var i = 0; i < numberOfEvent; i++) {
-        listEvents.push({"ID": rs.rows.item(i).ID, "eventName": rs.rows.item(i).eventName,
-        "eventType": rs.rows.item(i).eventType, "eventDate": rs.rows.item(i).eventDate,
-        "startTime": rs.rows.item(i).startTime, "OrgName": rs.rows.item(i).OrgName,
-        "location": rs.rows.item(i).location, "locationLat": rs.rows.item(i).locationLat,
-        "locationLng": rs.rows.item(i).locationLng});
+        if (checkDate(rs.rows.item(i).eventDate)) {
+          listEvents.push({"ID": rs.rows.item(i).ID, "eventName": rs.rows.item(i).eventName,
+          "eventType": rs.rows.item(i).eventType, "eventDate": rs.rows.item(i).eventDate,
+          "startTime": rs.rows.item(i).startTime, "OrgName": rs.rows.item(i).OrgName,
+          "location": rs.rows.item(i).location, "locationLat": rs.rows.item(i).locationLat,
+          "locationLng": rs.rows.item(i).locationLng});
+        }
       }
       onSuccessful(listEvents);
       // return listEvents;
@@ -73,6 +75,30 @@ function getListEvents(onSuccessful) {
   },
   function (err) {
     console.log('Get list events error, error code: ' + err.code);
+  });
+}
+
+function getListEndedEvents(onSuccessful) {
+  getConnection();
+  db.transaction(function (tx){
+    tx.executeSql("SELECT * FROM TBLEvents;", [], function(tx,rs){
+      var numberOfEvent = rs.rows.length;
+      var listEndedEvents = [];
+      for (var i = 0; i < numberOfEvent; i++) {
+        if (!checkDate(rs.rows.item(i).eventDate)) {
+          listEndedEvents.push({"ID": rs.rows.item(i).ID, "eventName": rs.rows.item(i).eventName,
+          "eventType": rs.rows.item(i).eventType, "eventDate": rs.rows.item(i).eventDate,
+          "startTime": rs.rows.item(i).startTime, "OrgName": rs.rows.item(i).OrgName,
+          "location": rs.rows.item(i).location, "locationLat": rs.rows.item(i).locationLat,
+          "locationLng": rs.rows.item(i).locationLng});
+        }
+      }
+      onSuccessful(listEndedEvents);
+      // return listEvents;
+    });
+  },
+  function (err) {
+    console.log('Get list ended events error, error code: ' + err.code);
   });
 }
 
@@ -294,4 +320,26 @@ function deteleAllImage(value) {
   function(){
     console.log('Deleted image!');
   });
+}
+
+function checkDate(evDate){
+  console.log(evDate);
+  var dateArray = evDate.split("/");
+  var currentDate = new Date();
+  console.log(currentDate);
+  var currentDay = currentDate.getDate();
+  var currentMonth = currentDate.getMonth() + 1;
+  var currentYear = currentDate.getFullYear();
+  var eventDay = parseInt(dateArray[1]);
+  var eventMonth = parseInt(dateArray[0]);
+  var eventYear = parseInt(dateArray[2]);
+  if (eventYear < currentYear) {
+    return false;
+  }else if (eventMonth < currentMonth && eventYear == currentYear) {
+    return false;
+  }else if (eventDay < currentDay && eventMonth == currentMonth && eventYear == currentYear) {
+    return false;
+  }else {
+    return true;
+  }
 }

@@ -15,35 +15,11 @@
   module.controller('ReportController', function($scope, $rootScope) {
     blindReportData();
 
-    $scope.saveButtonHandler = function(index) {
-      if(checkNullInput('txtReport')){
-        changeBorderColor();
-      }else{
-        if (checkDate()) {
-          var report = $("#txtReport").val();
-          var eventID = $rootScope.selectedItem["ID"];
-          console.log(report+" - "+eventID);
-          insertReport(eventID, report, function() {
-            console.log("created report!");
-            restoreBorderColor();
-            clearTextField('txtReport');
-            modalAddReport.hide();
-            ons.notification.alert({
-              message: 'Created report!',
-              title: '',
-              callback: function(idx) {
-                switch (idx) {
-                  case 0:
-                  navi.popPage();
-                  break;
-                }
-              }
-            });
-          });
-        }else {
-          modalAddReport.hide();
-          ons.notification.alert({message: 'This event has ended!',title: 'Error'});
-        }
+    $scope.btnWriteReportHandler = function(index) {
+      if (checkDate()) {
+        modalAddReport.show();
+      }else {
+        ons.notification.alert({message: 'This event has ended!',title: 'Error'});
       }
     };
 
@@ -70,6 +46,34 @@
       }
     }
 
+    $scope.saveButtonHandler = function(index) {
+      if(checkNullInput('txtReport')){
+        changeBorderColor();
+      }else{
+        var report = $("#txtReport").val();
+        var eventID = $rootScope.selectedItem["ID"];
+        console.log(report+" - "+eventID);
+        insertReport(eventID, report, function() {
+          console.log("created report!");
+          restoreBorderColor();
+          clearTextField('txtReport');
+          modalAddReport.hide();
+          ons.notification.alert({
+            message: 'Created report!',
+            title: '',
+            callback: function(idx) {
+              switch (idx) {
+                case 0:
+                // blindReportData();
+                // console.log('reloaded');
+                navi.popPage();
+                break;
+              }
+            }
+          });
+        });
+      }
+    };
 
     function blindReportData() {
       if (angular.isDefined($rootScope.selectedItem)) {
@@ -206,6 +210,12 @@
       console.log($scope.events);
     });
 
+    getListEndedEvents(function(listEndedEvents){
+      $scope.endedEvents = listEndedEvents;
+      $scope.$apply();
+      console.log($scope.endedEvents);
+    });
+
     getListTodayEvents(function(listTodayEvents){
       $scope.todayEvents = listTodayEvents;
       $scope.$apply();
@@ -214,6 +224,13 @@
 
     $scope.showDetail = function(index) {
       var selectedItem = $scope.events[index];
+      $rootScope.selectedItem = selectedItem;
+      console.log($rootScope.selectedItem);
+      $scope.navi.pushPage('detail.html',{ animation : 'lift' });
+    };
+
+    $scope.showEndedDetail = function(index) {
+      var selectedItem = $scope.endedEvents[index];
       $rootScope.selectedItem = selectedItem;
       console.log($rootScope.selectedItem);
       $scope.navi.pushPage('detail.html',{ animation : 'lift' });
