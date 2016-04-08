@@ -68,6 +68,8 @@
         </ons-tab>
         <ons-tab page="today.html" label="Today" icon="ion-ios-paper">
         </ons-tab>
+        <ons-tab page="ended.html" label="Ended" icon="ion-ios-bookmarks">
+        </ons-tab>
       </ons-tabbar>
     </ons-page>
   </ons-template>
@@ -133,7 +135,7 @@
 
   <!-- Report page -->
   <ons-template id="report.html">
-    <ons-page ng-controller="MasterController">
+    <ons-page ng-controller="ReportController">
       <ons-toolbar>
         <div class="left">
           <ons-back-button>Back</ons-back-button>
@@ -147,7 +149,7 @@
           Write report
         </ons-list-item>
       </ons-list>
-      <ons-list class="timeline" modifier="inset" ng-controller="ReportController">
+      <ons-list class="timeline" modifier="inset">
         <ons-list-item class="timeline-li" ng-repeat="rp in reports" modifier="inset">
           <ons-row>
             <ons-col width="90%">
@@ -259,6 +261,49 @@
       </ons-page>
     </ons-template>
     <!-- Today event page end -->
+
+    <!-- ended event page -->
+    <ons-template id="ended.html">
+      <ons-page ng-controller="MasterController">
+        <ons-toolbar>
+          <div class="left">
+          </div>
+          <div class="center">
+            Ended events
+          </div>
+          <div class="right">
+          </div>
+        </ons-toolbar>
+        <ons-list ng-controller="MasterController">
+          <ons-list-item modifier="chevron" class="item" ng-repeat="ev in endedEvents" ng-click="showEndedDetail($index)">
+            <ons-row>
+              <ons-col width="60px">
+                <div class="list-event-icon" id="eventType"><img src="img/event-type/{{ev.eventType}}.png" height="50px" width="50px"></div>
+              </ons-col>
+              <ons-col>
+                <header>
+                  <span class="item-title">{{ev.eventName}}</span>
+                </header>
+                <p class="item-desc">
+                  <ons-icon icon="ion-ios-location" style="color:#ff6c64;" size="20px"></ons-icon>
+                  {{ev.location}}
+                </p>
+                <p class="item-desc">
+                  <ons-icon icon="ion-ios-calendar-outline" style="color:#ff6c64" size="20px"></ons-icon>
+                  {{ev.eventDate}}
+                </p>
+                <p class="item-desc">
+                  <ons-icon icon="ion-ios-clock-outline" style="color:#ff6c64" size="20px"></ons-icon>
+                  {{ev.startTime}}
+                </p>
+              </ons-col>
+            </ons-row>
+          </ons-list-item>
+        </ons-list>
+      </ons-page>
+    </ons-template>
+    <!-- Ended event page end -->
+
 
     <!-- Create page -->
     <ons-template id="create.html">
